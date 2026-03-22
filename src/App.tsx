@@ -1,22 +1,30 @@
 import "./index.css";
+import verses from './assets/versesimple.json';
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+interface Data {
+    id      : string,
+    chapter : string,
+    verse   : string,
+    english : string,
+    arabic  : string,
+}
+
+interface Verses {
+    type     : string,
+    version  : string | null,
+    comment  : string | null,
+    name     : string | null,
+    database : string | null,
+    data     : Data[] | null,
+}
+
+const parsedVerses = verses as Verses[]
+const firstVerse = parsedVerses[2]?.data?.[0]?.arabic
 
 export function App() {
   return (
-    <div className="app">
-      <div className="logo-container">
-        <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-        <img src={reactLogo} alt="React Logo" className="logo react-logo" />
-      </div>
-
-      <h1>Bun + React</h1>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p>
-    </div>
-  );
+      <p className="arabic-text"> {firstVerse} </p>
+  )
 }
 
-export default App;
+export default App
