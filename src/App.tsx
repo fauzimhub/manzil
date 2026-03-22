@@ -23,7 +23,9 @@ const firstVerse = parsedVerses[2]?.data?.[0]?.arabic
 
 export function App() {
   return (
-      <p className="arabic-text"> {firstVerse} </p>
+    <>
+        <p className="arabic-text"> {firstVerse} </p>
+    </>
   )
 }
 
