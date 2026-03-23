@@ -1,32 +1,17 @@
-import "./index.css";
-import verses from './assets/versesimple.json';
-
-interface Data {
-    id      : string,
-    chapter : string,
-    verse   : string,
-    english : string,
-    arabic  : string,
-}
-
-interface Verses {
-    type     : string,
-    version  : string | null,
-    comment  : string | null,
-    name     : string | null,
-    database : string | null,
-    data     : Data[] | null,
-}
-
-const parsedVerses = verses as Verses[]
-const firstVerse = parsedVerses[2]?.data?.[0]?.arabic
+import "./index.css"
+import * as versesData from './VersesData.ts'
 
 export function App() {
-  return (
-    <>
-        <p className="arabic-text"> {firstVerse} </p>
-    </>
-  )
+
+    const firstVerse = versesData.getVerses(0)
+
+    return (
+        <>
+            {firstVerse.map((verses, index) => (
+              <p key={index} className="arabic-text">{verses.arabic}</p>
+            ))}
+        </>
+    )
 }
 
 export default App
