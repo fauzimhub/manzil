@@ -32,7 +32,12 @@ export function ChaptersPage() {
 
     const pages = []
     for (let i = 1; i <= pageCount; i++) {
-        pages.push(<Link key={i} to={`?chapter=${chapter}&page=${i}`}>| {i} |</Link>)
+        pages.push(<Link
+                      key={i}
+                      to={`?chapter=${chapter}&page=${i}`}
+                      onClick={() => window.scrollTo(0, 0)}>
+                    | {i} |
+                   </Link>)
     }
 
     return (
