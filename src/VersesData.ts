@@ -16,7 +16,7 @@ const surahsData = (() => {
     return parsedSurahs
 })()
 
-const surahsMetadata = (() => {
+export const surahsMetadata = (() => {
 
     const metadata : Record<string,number>[] = []
 
