@@ -12,15 +12,14 @@ export function ChaptersPage() {
 
     const verseCount = versesData.surahsMetadata[chapter - 1].versesCount
 
-    const verses = versesData.getVerses(chapter - 1)
-    if (!verses) return <p>Not found</p>;
-
     const pageCount = getPageCount(verseCount)
     if ( page > pageCount) return <p>Not found</p>
 
     const pageIndex = getPageIndex(chapter,page,pageCount,verseCount)
     const pageLinks = getPageLinks(chapter,pageCount)
 
+    const verses = getVerses(chapter,pageIndex)
+    if (!verses) return <p>Not found</p>;
 
     return (
         <>
@@ -28,9 +27,7 @@ export function ChaptersPage() {
                 <Link to={`/`}> Home </Link>
             </p>}
 
-            {verses.slice(pageIndex.start,pageIndex.end).map((verse, index) => (
-                <p key={index} className="arabic-text">{verse.arabic}</p>
-            ))}
+            {verses}
 
             {<nav>{pageLinks}</nav>}
         </>
@@ -80,4 +77,21 @@ const getPageLinks = (chapter,pageCount) => {
     }
 
     return links
+}
+
+const getVerses = (chapter,pageIndex) => {
+    const verses = versesData.getVerses(chapter - 1)
+    const arabicEnglish = []
+
+    arabicEnglish.push(verses.slice(pageIndex.start, pageIndex.end).map((verse, index) => (
+        <p className="verse-row">
+            <span className="arabic-text">{verse.arabic}</span>
+            <span
+                className="english-text"
+                dangerouslySetInnerHTML={{ __html: `<sup class="verse-number">${index + 1}</sup> ${verse.english}` }}
+            />
+        </p>
+    )))
+
+    return arabicEnglish
 }
