@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "manzil",
-  "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "version": "1.0.0",
+  "identifier": "com.fauzim.manzil",
   "build": {
     "frontendDist": "../src",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "manzil",
+        "title": "Manzil",
         "width": 800,
         "height": 600,
         "resizable": true,
