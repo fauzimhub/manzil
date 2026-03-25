@@ -2,10 +2,36 @@
   font-family: 'AmiriQuran';
   src: local('AmiriQuran'), url(./assets/fonts/AmiriQuran.woff) format('woff');
 }
+
+.verse-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  margin: 0 auto 32px auto;  /* auto centers it horizontally */
+  padding: 0;
+  max-width: 1200px;           /* limit the width */
+}
+
 .arabic-text {
-  font-family: 'AmiriQuran', serif;
-  font-size: 32px;
-  direction: rtl;
+  font-family: 'AmiriQuran';
+  flex: 2;              /* give arabic more space */
   text-align: right;
-  line-height: 2; 
+  direction: rtl;
+  font-size: 1.8rem;    /* bigger */
+  line-height: 2.2;
+}
+
+.verse-number {
+  color: #555;
+  font-size: 0.75rem;
+  margin-right: 2px;
+}
+
+.english-text {
+  flex: 1.5;
+  text-align: left;
+  line-height: 1.8;
+  font-size: 1rem;
+  font-family: serif;   /* match the serif look in image 2 */
 }
