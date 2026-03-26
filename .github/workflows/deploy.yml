@@ -5,6 +5,7 @@ on:
     tags:
       - "1.0.0"        # triggers only on this exact tag
       # use "v*" if you prefer tags like v1.0.0, v2.0.0, etc.
+  workflow_dispatch:
 
 permissions:
   contents: read
