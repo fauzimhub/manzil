@@ -1,15 +1,16 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+// import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { ChaptersPage } from './ChaptersPage.tsx';
 import * as versesData from './VersesData.ts';
 
 export function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chapters" element={<ChaptersPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
