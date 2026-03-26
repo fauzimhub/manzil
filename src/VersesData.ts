@@ -86,6 +86,7 @@ const verses = (() => {
         arabicEnglish[surahIndex][ayahIndex] = {
             arabic: verseData.arabic,
             english: verseData.english,
+            number: Number(verseData.verse)
         }
 
         ayahIndex += 1

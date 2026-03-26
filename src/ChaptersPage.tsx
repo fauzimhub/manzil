@@ -83,15 +83,22 @@ const getVerses = (chapter,pageIndex) => {
     const verses = versesData.getVerses(chapter - 1)
     const arabicEnglish = []
 
-    arabicEnglish.push(verses.slice(pageIndex.start, pageIndex.end).map((verse, index) => (
-        <p className="verse-row">
-            <span className="arabic-text">{verse.arabic}</span>
-            <span
-                className="english-text"
-                dangerouslySetInnerHTML={{ __html: `<sup class="verse-number">${index + 1}</sup> ${verse.english}` }}
-            />
-        </p>
-    )))
+
+    arabicEnglish.push(verses.slice(pageIndex.start, pageIndex.end).map((verse, index) => {
+        const englishHtml = verse.number !== 0
+            ? `<sup class="verse-number">${verse.number}</sup> ${verse.english}`
+            : verse.english;
+
+        return (
+            <p className="verse-row">
+                <span className="arabic-text">{verse.arabic}</span>
+                <span
+                    className="english-text"
+                    dangerouslySetInnerHTML={{ __html: englishHtml }}
+                />
+            </p>
+        )
+    }))
 
     return arabicEnglish
 }
