@@ -1,7 +1,8 @@
 // import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { HashRouter, Routes, Route, Link } from 'react-router-dom';
-import { ChaptersPage } from './ChaptersPage.tsx';
-import * as versesData from './VersesData.ts';
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
+import { ChaptersPage } from "./ChaptersPage.tsx";
+import * as versesData from "./VersesData.ts";
+import React from "react";
 
 export function App() {
   return (
@@ -20,7 +21,8 @@ function Home() {
       {versesData.surahsMetadata.map((surahMetadata, i) => (
         <li key={i}>
           <Link to={`/chapters?chapter=${i + 1}&page=1`}>
-            {surahMetadata.nameTransliteration} ({surahMetadata.nameTranslation})
+            {surahMetadata.nameTransliteration} ({surahMetadata.nameTranslation}
+            )
           </Link>
         </li>
       ))}
