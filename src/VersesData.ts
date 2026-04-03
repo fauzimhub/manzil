@@ -193,5 +193,14 @@ export function getNote(
   ayah: number,
   index: number,
 ): string | undefined {
-  return notes(surah, ayah, index);
+  let note = notes(surah, ayah, index);
+  if (referenceOtherNote(note)) {
+    const [s, a, i] = note.split(":");
+    note = notes(Number(s), Number(a), Number(i));
+  }
+  return note;
 }
+
+const referenceOtherNote = (str): boolean => {
+  return /^\d+:\d+:\d+$/.test(str);
+};
