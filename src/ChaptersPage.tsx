@@ -142,7 +142,7 @@ const Verses = ({ chapter, pageIndex, verseHash }: VersesProps) => {
                             supIndex,
                           ),
                         },
-                      ];
+                      ].sort((a, b) => a.supIndex - b.supIndex);
                     });
                   }
                 }}
