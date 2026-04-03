@@ -2,6 +2,7 @@ import versesJSON from "./assets/versesimple.json";
 import surahsJSON from "./assets/surah.json";
 import enWithNotesJSON from "./assets/verses_en_sam-gerrans_with-notes.json";
 import arOriginalJSON from "./assets/verses_ar_original.json";
+import notesENJSON from "./assets/notes_en_sam-gerrans.json";
 
 const enWithNotes = (() => {
   type Verse = { surah: number; ayah: number; text: string };
@@ -11,6 +12,16 @@ const enWithNotes = (() => {
   );
 
   return parsedENWithNotes;
+})();
+
+const notesEN = (() => {
+  type Verse = { index: string; text: string };
+
+  const parsedNotesEN = (notesENJSON as [string, string][]).map(
+    ([index, text]) => ({ index, text }) as Verse,
+  );
+
+  return parsedNotesEN;
 })();
 
 const arOriginal = (() => {
@@ -146,4 +157,41 @@ export function getVerses(chapter: number): Record<string, string>[] {
   return verses2[chapter];
 }
 
+const binarySearch = (target, arr) => {
+  const arrLen = arr.length;
+  var low = 0;
+  var high = Number(arrLen - 1);
+  var mid = undefined;
+  while (low <= high) {
+    mid = Math.floor((high + low) / 2);
+    const str = notesEN[mid]?.index;
+    const [surah, ayah, index] = str.split(":");
+    const guess = Number(
+      `${surah}${ayah.padStart(3, "0")}${index.padStart(2, "0")}`,
+    );
+    if (guess == target) return mid;
+    if (guess > target) high = mid - 1;
+    else low = mid + 1;
+  }
+  return -1;
+};
+
+const notes = (surah, ayah, index) => {
+  const parts = [
+    surah,
+    String(ayah).padStart(3, "0"),
+    String(index).padStart(2, "0"),
+  ];
+  const target = Number(parts.join(""));
+  const i = binarySearch(target, notesEN);
+  if (i == -1) return "Note not found";
+  return notesEN[i]?.text;
+};
+
+export function getNote(
+  surah: number,
+  ayah: number,
+  index: number,
+): string | undefined {
+  return notes(surah, ayah, index);
 }
