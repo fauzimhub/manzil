@@ -79,8 +79,8 @@ interface VersesProps {
   pageIndex: {
     start: number;
     end: number;
-    verseHash: number;
   };
+  verseHash: number;
 }
 
 const Verses = ({ chapter, pageIndex, verseHash }: VersesProps) => {
