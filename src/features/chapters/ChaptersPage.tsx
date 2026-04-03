@@ -1,7 +1,8 @@
-import "./index.css";
+import "./chapters.css";
 import { useSearchParams, Link } from "react-router-dom";
-import * as versesData from "./VersesData.ts";
+import * as versesData from "../../shared/scripts/VersesData.ts";
 import React, { useState, useEffect } from "react";
+import { Bismillah } from "./components/Bismillah.tsx";
 
 const versePerpageCount: number = 50;
 
@@ -9,17 +10,6 @@ export function ChaptersPage() {
   const [searchParams] = useSearchParams();
   const chapter = Number(searchParams.get("chapter"));
   const page = Number(searchParams.get("page"));
-  const verseHash = Number(window.location.hash.split("#").pop());
-
-  useEffect(() => {
-    if (!verseHash) return;
-    setTimeout(() => {
-      const el = document.getElementById(`verse-${verseHash}`);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
-  }, [verseHash, chapter, page]);
 
   const verseCount = versesData.surahsMetadata[chapter - 1].versesCount;
 
@@ -28,11 +18,6 @@ export function ChaptersPage() {
 
   const pageIndex = getPageIndex(chapter, page, pageCount, verseCount);
   const pageLinks = getPageLinks(chapter, pageCount);
-  const bismillah = getBismillah();
-
-  const [activeBismillahNote, setActiveBismillahNote] = useState<{
-    text: string;
-  } | null>(null);
 
   return (
     <>
@@ -40,34 +25,13 @@ export function ChaptersPage() {
         <Link to={`/`}> Home </Link>
       </p>
 
-      {pageIndex.start === 0 && chapter !== 1 && chapter !== 9 && (
-        <p className="verse-row">
-          <span className="arabic-text">{bismillah.arabic}</span>
-          <span
-            className="english-text"
-            dangerouslySetInnerHTML={{ __html: bismillah.english }}
-            onClick={(e) => {
-              const target = e.target as HTMLElement;
-              if (target.tagName === "SUP") {
-                setActiveBismillahNote((prev) =>
-                  prev ? null : { text: versesData.getNote(1, 1, 1) },
-                );
-              }
-            }}
-          />
-        </p>
-      )}
+      <Bismillah
+        versesData={versesData}
+        pageIndex={pageIndex}
+        chapter={chapter}
+      />
 
-      {activeBismillahNote && (
-        <div className="footnote-bar">
-          <span
-            dangerouslySetInnerHTML={{ __html: activeBismillahNote.text }}
-          />
-          <button onClick={() => setActiveBismillahNote(null)}>×</button>
-        </div>
-      )}
-
-      <Verses chapter={chapter} pageIndex={pageIndex} verseHash={verseHash} />
+      <Verses chapter={chapter} pageIndex={pageIndex} />
 
       <nav>{pageLinks}</nav>
     </>
@@ -80,10 +44,9 @@ interface VersesProps {
     start: number;
     end: number;
   };
-  verseHash: number;
 }
 
-const Verses = ({ chapter, pageIndex, verseHash }: VersesProps) => {
+const Verses = ({ chapter, pageIndex }: VersesProps) => {
   const [activeNotes, setActiveNotes] = useState<
     {
       index: number;
@@ -104,10 +67,7 @@ const Verses = ({ chapter, pageIndex, verseHash }: VersesProps) => {
 
         return (
           <React.Fragment key={`${chapter}-${verse.number}`}>
-            <p
-              id={`verse-${verse.number}`}
-              className={`verse-row ${verse.number === verseHash ? "verse-highlighted" : ""}`}
-            >
+            <p id={`verse-${verse.number}`} className={`verse-row`}>
               <span className="arabic-text">{verse.arabic}</span>
               <span
                 className="english-text"
@@ -159,7 +119,13 @@ const Verses = ({ chapter, pageIndex, verseHash }: VersesProps) => {
                       const target = e.target as HTMLElement;
                       if (target.tagName === "A") {
                         const aIndex = target.textContent;
-                        console.log(`TODO : handle when ${aIndex} is clicked`);
+                        const validIndex = /^\d+:\d+$/.test(aIndex);
+                        if (validIndex) {
+                          const [surah, ayah] = aIndex.split(":");
+                          {
+                            /* TODO: Handle when notes in link clicked */
+                          }
+                        }
                       }
                     }}
                   />
@@ -230,9 +196,4 @@ const getPageLinks = (chapter, pageCount) => {
   }
 
   return links;
-};
-
-const getBismillah = () => {
-  const verses = versesData.getVerses(0);
-  return verses[0];
 };
