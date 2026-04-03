@@ -1,5 +1,27 @@
 import versesJSON from "./assets/versesimple.json";
 import surahsJSON from "./assets/surah.json";
+import enWithNotesJSON from "./assets/verses_en_sam-gerrans_with-notes.json";
+import arOriginalJSON from "./assets/verses_ar_original.json";
+
+const enWithNotes = (() => {
+  type Verse = { surah: number; ayah: number; text: string };
+
+  const parsedENWithNotes = (enWithNotesJSON as [number, number, string][]).map(
+    ([surah, ayah, text]) => ({ surah, ayah, text }) as Verse,
+  );
+
+  return parsedENWithNotes;
+})();
+
+const arOriginal = (() => {
+  type Verse = { text: string; surah: number; ayah: number };
+
+  const arOriginal = (arOriginalJSON as [string, number, number][]).map(
+    ([surah, ayah, text]) => ({ text, surah, ayah }) as Verse,
+  );
+
+  return arOriginal;
+})();
 
 const surahsData = (() => {
   interface Surah {
@@ -91,6 +113,37 @@ const verses = (() => {
   return arabicEnglish;
 })();
 
+const verses2 = (() => {
+  const arabicEnglish: Record<string, string>[][] = [];
+
+  let surahIndex: number = 0;
+  let ayahIndex: number = 0;
+
+  for (let i = 0; i < arOriginal.length; i++) {
+    const currentVerseCount = surahsMetadata[surahIndex].versesCount;
+    if (ayahIndex === currentVerseCount) {
+      ayahIndex = 0;
+      surahIndex += 1;
+    }
+
+    if (!arabicEnglish[surahIndex]) {
+      arabicEnglish[surahIndex] = [];
+    }
+
+    arabicEnglish[surahIndex][ayahIndex] = {
+      arabic: arOriginal[i]?.text,
+      english: enWithNotes[i]?.text,
+      number: Number(arOriginal[i]?.ayah),
+    };
+
+    ayahIndex += 1;
+  }
+
+  return arabicEnglish;
+})();
+
 export function getVerses(chapter: number): Record<string, string>[] {
-  return verses[chapter];
+  return verses2[chapter];
+}
+
 }
