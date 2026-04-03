@@ -1,21 +1,13 @@
 import React, { useState } from "react";
+import { getVerses } from "../../../shared/scripts";
 
 interface BismillahProps {
-  versesData: {
-    arabic: string;
-    english: string;
-    number: number;
-  };
   pageIndex: number;
   chapter: number;
 }
 
-export const Bismillah = ({
-  versesData,
-  pageIndex,
-  chapter,
-}: BismillahProps) => {
-  const bismillah = getBismillah(versesData);
+export const Bismillah = ({ pageIndex, chapter }: BismillahProps) => {
+  const bismillah = getBismillah();
   const [activeBismillahNote, setActiveBismillahNote] = useState<{
     text: string;
   } | null>(null);
@@ -51,7 +43,7 @@ export const Bismillah = ({
   );
 };
 
-const getBismillah = (versesData) => {
-  const verses = versesData.getVerses(0);
+const getBismillah = () => {
+  const verses = getVerses(0);
   return verses[0];
 };

@@ -1,7 +1,7 @@
 import "./chapters.css";
 import { useSearchParams, Link } from "react-router-dom";
-import * as versesData from "../../shared/scripts/VersesData.ts";
-import React, { useState, useEffect } from "react";
+import { getVerses, getNote, surahsMetadata } from "../../shared/scripts";
+import React, { useState } from "react";
 import { Bismillah } from "./components/Bismillah.tsx";
 
 const versePerpageCount: number = 50;
@@ -11,7 +11,7 @@ export function ChaptersPage() {
   const chapter = Number(searchParams.get("chapter"));
   const page = Number(searchParams.get("page"));
 
-  const verseCount = versesData.surahsMetadata[chapter - 1].versesCount;
+  const verseCount = surahsMetadata[chapter - 1].versesCount;
 
   const pageCount = getPageCount(verseCount);
   if (page > pageCount) return <p>Not found</p>;
@@ -25,11 +25,7 @@ export function ChaptersPage() {
         <Link to={`/`}> Home </Link>
       </p>
 
-      <Bismillah
-        versesData={versesData}
-        pageIndex={pageIndex}
-        chapter={chapter}
-      />
+      <Bismillah pageIndex={pageIndex} chapter={chapter} />
 
       <Verses chapter={chapter} pageIndex={pageIndex} />
 
@@ -55,7 +51,7 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
     }[]
   >([]);
 
-  const verses = versesData.getVerses(chapter - 1);
+  const verses = getVerses(chapter - 1);
 
   return (
     <>
@@ -96,11 +92,7 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
                         {
                           index: verse.number,
                           supIndex,
-                          text: versesData.getNote(
-                            chapter,
-                            verse.number,
-                            supIndex,
-                          ),
+                          text: getNote(chapter, verse.number, supIndex),
                         },
                       ].sort((a, b) => a.supIndex - b.supIndex);
                     });
@@ -163,7 +155,7 @@ const getPageCount = (verseCount) => {
 };
 
 const getPageIndex = (chapter, page, pageCount, verseCount) => {
-  const surahNumber = versesData.surahsMetadata[chapter - 1].number;
+  const surahNumber = surahsMetadata[chapter - 1].number;
   let start: number = 0;
   let end: number =
     start + verseCount + 1 * Number(surahNumber != 1 || surahNumber != 9);

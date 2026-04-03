@@ -1,1 +1,1 @@
-export { surahsMetadata } from "./VersesData.ts";
+export { getVerse, getVerses, getNote, surahsMetadata } from "./VersesData.ts";
