@@ -1,8 +1,8 @@
-import versesJSON from "./assets/versesimple.json";
-import surahsJSON from "./assets/surah.json";
-import enWithNotesJSON from "./assets/verses_en_sam-gerrans_with-notes.json";
-import arOriginalJSON from "./assets/verses_ar_original.json";
-import notesENJSON from "./assets/notes_en_sam-gerrans.json";
+import versesJSON from "../assets/versesimple.json";
+import surahsJSON from "../assets/surah.json";
+import enWithNotesJSON from "../assets/verses_en_sam-gerrans_with-notes.json";
+import arOriginalJSON from "../assets/verses_ar_original.json";
+import notesENJSON from "../assets/notes_en_sam-gerrans.json";
 
 const enWithNotes = (() => {
   type Verse = { surah: number; ayah: number; text: string };
@@ -152,6 +152,16 @@ const verses2 = (() => {
 
   return arabicEnglish;
 })();
+
+export function getVerse(
+  chapter: number,
+  verseBegin: number,
+  verseEnd?: number,
+): string {
+  console.log(verses2[chapter][verseBegin].arabic);
+  if (verseEnd == undefined) return verses2[chapter][verseBegin];
+  return verses2[chapter][verseBegin];
+}
 
 export function getVerses(chapter: number): Record<string, string>[] {
   return verses2[chapter];
