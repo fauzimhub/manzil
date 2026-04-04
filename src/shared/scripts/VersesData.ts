@@ -157,10 +157,16 @@ export function getVerse(
   chapter: number,
   verseBegin: number,
   verseEnd?: number,
-): string {
-  console.log(verses2[chapter][verseBegin].arabic);
-  if (verseEnd == undefined) return verses2[chapter][verseBegin];
-  return verses2[chapter][verseBegin];
+): Record<string, string>[] {
+  const verses: Record<string, string>[] = [];
+  if (verseEnd == undefined) {
+    verses[0] = verses2[chapter][verseBegin];
+    return verses;
+  }
+  for (let i = verseBegin; i <= verseEnd; i++) {
+    verses[i] = verses2[chapter][i];
+  }
+  return verses;
 }
 
 export function getVerses(chapter: number): Record<string, string>[] {
@@ -169,9 +175,9 @@ export function getVerses(chapter: number): Record<string, string>[] {
 
 const binarySearch = (target, arr) => {
   const arrLen = arr.length;
-  var low = 0;
-  var high = Number(arrLen - 1);
-  var mid = undefined;
+  let low = 0;
+  let high = Number(arrLen - 1);
+  let mid;
   while (low <= high) {
     mid = Math.floor((high + low) / 2);
     const str = notesEN[mid]?.index;
