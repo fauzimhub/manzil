@@ -94,3 +94,68 @@
     background-color: #e8f0fe;
     border-radius: 2px;
 }
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.reading-popup {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1100px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.reading-popup-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.reading-popup-header button {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+}
+
+.reading-popup-header button:hover {
+    color: #333;
+}
+
+.reading-popup-body {
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.popup-arabic {
+    font-family: "AmiriQuran", serif;
+    font-size: 1.6rem;
+    line-height: 2.2;
+    direction: rtl;
+    text-align: justify;
+    margin: 0 0 0.5rem 0;
+}
+
+.popup-english {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #333;
+    margin: 0;
+}
