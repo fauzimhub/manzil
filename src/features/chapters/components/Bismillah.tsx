@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getVerses } from "../../../shared/scripts";
+import { getVerses, getNote } from "../../../shared/scripts";
 
 interface BismillahProps {
   pageIndex: number;
@@ -23,7 +23,7 @@ export const Bismillah = ({ pageIndex, chapter }: BismillahProps) => {
               const target = e.target as HTMLElement;
               if (target.tagName === "SUP") {
                 setActiveBismillahNote((prev) =>
-                  prev ? null : { text: versesData.getNote(1, 1, 1) },
+                  prev ? null : { text: getNote(1, 1, 1) },
                 );
               }
             }}
