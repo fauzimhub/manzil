@@ -12,6 +12,10 @@ based on : [Official Quranite Reader](https://reader.quranite.com/) by Sam Gerra
 
     https://quranite.com/
 
+- Quran Svelte by [[abnewstein](https://github.com/abnewstein)], for json and quranite scraper:
+
+    https://github.com/abnewstein/quran-svelte
+
 - Add fonts in react:
 
     https://stackoverflow.com/questions/41676054/how-to-add-fonts-to-create-react-app-based-projects
