@@ -1,8 +1,15 @@
 import "./chapters.css";
 import { useSearchParams, Link } from "react-router-dom";
-import { getVerses, getNote, surahsMetadata } from "../../shared/scripts";
-import React, { useState } from "react";
+import { getVerses, surahsMetadata } from "../../shared/scripts";
+import React, { Fragment, useEffect, useState } from "react";
 import { Bismillah } from "./components/Bismillah.tsx";
+import {
+  VerseArabic,
+  VerseEnglish,
+  VerseActivableNotes,
+  VersePopup,
+  togglePopup,
+} from "./components/Verse.tsx";
 
 const versePerpageCount: number = 50;
 
@@ -51,93 +58,62 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
     }[]
   >([]);
 
+  const [popupStack, setPopupStack] = useState<
+    {
+      verses: { arabic: string; english: string; number: number }[];
+    }[]
+  >([]);
+
+  // open new popup on top
+  const pushPopup = (aIndex: string) => {
+    setPopupStack((prev) => [...prev, togglePopup(aIndex)]);
+  };
+
+  // close top popup
+  const popPopup = () => {
+    setPopupStack((prev) => prev.slice(0, -1));
+  };
+
+  // close all
+  const clearPopup = () => setPopupStack([]);
+
+  useEffect(() => {
+    setActiveNotes([]);
+    setPopupStack([]);
+  }, [chapter, pageIndex.start]);
+
   const verses = getVerses(chapter - 1);
 
   return (
     <>
       {verses.slice(pageIndex.start, pageIndex.end).map((verse) => {
-        const englishHtml =
-          verse.number !== 0
-            ? `<sup class="verse-number">${verse.number}</sup> ${verse.english}`
-            : verse.english;
-
         return (
-          <React.Fragment key={`${chapter}-${verse.number}`}>
+          <Fragment key={`${chapter}-${verse.number}`}>
             <p id={`verse-${verse.number}`} className={`verse-row`}>
-              <span className="arabic-text">{verse.arabic}</span>
-              <span
-                className="english-text"
-                dangerouslySetInnerHTML={{ __html: englishHtml }}
-                onClick={(e) => {
-                  const target = e.target as HTMLElement;
-                  if (target.tagName === "SUP") {
-                    if (target.className === "verse-number") return;
-                    const supIndex = Number(target.textContent);
-                    setActiveNotes((prev) => {
-                      const exists = prev.find(
-                        (n) =>
-                          n.index === verse.number && n.supIndex === supIndex,
-                      );
-                      if (exists) {
-                        return prev.filter(
-                          (n) =>
-                            !(
-                              n.index === verse.number &&
-                              n.supIndex === supIndex
-                            ),
-                        );
-                      }
-                      return [
-                        ...prev,
-                        {
-                          index: verse.number,
-                          supIndex,
-                          text: getNote(chapter, verse.number, supIndex),
-                        },
-                      ].sort((a, b) => a.supIndex - b.supIndex);
-                    });
-                  }
-                }}
+              <VerseArabic arabic={verse.arabic} />
+              <VerseEnglish
+                chapter={chapter}
+                verseNumber={verse.number}
+                english={verse.english}
+                setActiveNotes={setActiveNotes}
               />
             </p>
-
-            {activeNotes
-              .filter((n) => n.index === verse.number)
-              .map((n) => (
-                <div className="footnote-bar" key={`${n.index}-${n.supIndex}`}>
-                  <span
-                    dangerouslySetInnerHTML={{ __html: n.text }}
-                    onClick={(e) => {
-                      const target = e.target as HTMLElement;
-                      if (target.tagName === "A") {
-                        const aIndex = target.textContent;
-                        const validIndex = /^\d+:\d+$/.test(aIndex);
-                        if (validIndex) {
-                          const [surah, ayah] = aIndex.split(":");
-                          {
-                            /* TODO: Handle when notes in link clicked */
-                          }
-                        }
-                      }
-                    }}
-                  />
-                  <button
-                    onClick={() =>
-                      setActiveNotes((prev) =>
-                        prev.filter(
-                          (p) =>
-                            !(p.index === n.index && p.supIndex === n.supIndex),
-                        ),
-                      )
-                    }
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-          </React.Fragment>
+            <VerseActivableNotes
+              activeNotes={activeNotes}
+              verseNumber={verse.number}
+              setActiveNotes={setActiveNotes}
+              pushPopup={pushPopup}
+            />
+          </Fragment>
         );
       })}
+
+      <VersePopup
+        popupStack={popupStack}
+        pushPopup={pushPopup}
+        popPopup={popPopup}
+        clearPopup={clearPopup}
+      />
     </>
   );
 };
