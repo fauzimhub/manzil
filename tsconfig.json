@@ -21,9 +21,9 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "src/*": ["./src/*"]
     },
 
     // Some stricter flags (disabled by default)
@@ -32,5 +32,5 @@
     "noPropertyAccessFromIndexSignature": false
   },
 
-  "exclude": ["dist", "node_modules"]
+    "exclude": ["dist", "node_modules", "src-tauri"]
 }

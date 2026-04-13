@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { getVerses, getNote } from "../../../shared/scripts";
 
 interface BismillahProps {
-  pageIndex: number;
+  pageIndex: { start: number; end: number };
   chapter: number;
 }
 
@@ -15,10 +15,10 @@ export const Bismillah = ({ pageIndex, chapter }: BismillahProps) => {
     <>
       {pageIndex.start === 0 && chapter !== 1 && chapter !== 9 && (
         <p className="verse-row">
-          <span className="arabic-text">{bismillah.arabic}</span>
+          <span className="arabic-text">{bismillah?.arabic}</span>
           <span
             className="english-text"
-            dangerouslySetInnerHTML={{ __html: bismillah.english }}
+            dangerouslySetInnerHTML={{ __html: bismillah?.english ?? "" }}
             onClick={(e) => {
               const target = e.target as HTMLElement;
               if (target.tagName === "SUP") {

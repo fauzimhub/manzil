@@ -18,12 +18,12 @@ export function ChaptersPage() {
   const chapter = Number(searchParams.get("chapter"));
   const page = Number(searchParams.get("page"));
 
-  const verseCount = surahsMetadata[chapter - 1].versesCount;
+  const verseCount = Number(surahsMetadata[chapter - 1]?.versesCount);
 
-  const pageCount = getPageCount(verseCount);
+  const pageCount = getPageCount(verseCount ?? 0);
   if (page > pageCount) return <p>Not found</p>;
 
-  const pageIndex = getPageIndex(chapter, page, pageCount, verseCount);
+  const pageIndex = getPageIndex(chapter, page, pageCount, verseCount ?? 0);
   const pageLinks = getPageLinks(chapter, pageCount);
 
   return (
@@ -60,6 +60,7 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
 
   const [popupStack, setPopupStack] = useState<
     {
+      surah: number;
       verses: { arabic: string; english: string; number: number }[];
     }[]
   >([]);
@@ -90,17 +91,17 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
         return (
           <Fragment key={`${chapter}-${verse.number}`}>
             <p id={`verse-${verse.number}`} className={`verse-row`}>
-              <VerseArabic arabic={verse.arabic} />
+              <VerseArabic arabic={verse.arabic ?? ""} />
               <VerseEnglish
                 chapter={chapter}
-                verseNumber={verse.number}
-                english={verse.english}
+                verseNumber={Number(verse.number) || 0}
+                english={verse.english ?? ""}
                 setActiveNotes={setActiveNotes}
               />
             </p>
             <VerseActivableNotes
               activeNotes={activeNotes}
-              verseNumber={verse.number}
+              verseNumber={Number(verse.number) || 0}
               setActiveNotes={setActiveNotes}
               pushPopup={pushPopup}
             />
@@ -118,7 +119,7 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
   );
 };
 
-const getPageCount = (verseCount) => {
+const getPageCount = (verseCount: number) => {
   let count: number = 1;
 
   if (verseCount > versePerpageCount) {
@@ -130,11 +131,16 @@ const getPageCount = (verseCount) => {
   return count;
 };
 
-const getPageIndex = (chapter, page, pageCount, verseCount) => {
-  const surahNumber = surahsMetadata[chapter - 1].number;
+const getPageIndex = (
+  chapter: number,
+  page: number,
+  pageCount: number,
+  verseCount: number,
+) => {
+  const surahNumber = Number(surahsMetadata[chapter - 1]?.number);
   let start: number = 0;
   let end: number =
-    start + verseCount + 1 * Number(surahNumber != 1 || surahNumber != 9);
+    start + verseCount + 1 * Number(surahNumber != 1 && surahNumber != 9);
 
   if (pageCount > 1) {
     start = versePerpageCount * (page - 1);
@@ -149,7 +155,7 @@ const getPageIndex = (chapter, page, pageCount, verseCount) => {
   };
 };
 
-const getPageLinks = (chapter, pageCount) => {
+const getPageLinks = (chapter: number, pageCount: number) => {
   const links = [];
   for (let i = 1; i <= pageCount; i++) {
     links.push(

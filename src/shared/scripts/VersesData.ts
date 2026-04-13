@@ -27,8 +27,8 @@ const notesEN = (() => {
 const arOriginal = (() => {
   type Verse = { text: string; surah: number; ayah: number };
 
-  const arOriginal = (arOriginalJSON as [string, number, number][]).map(
-    ([surah, ayah, text]) => ({ text, surah, ayah }) as Verse,
+  const arOriginal = (arOriginalJSON as [number, number, string][]).map(
+    ([surah, ayah, text]) => ({ surah, ayah, text }) as Verse,
   );
 
   return arOriginal;
@@ -49,15 +49,15 @@ const surahsData = (() => {
 })();
 
 export const surahsMetadata = (() => {
-  const metadata: Record<string, number>[] = [];
+  const metadata: Record<string, string>[] = [];
 
   surahsData.forEach((surahData, index) => {
     metadata[index] = {
-      number: surahData.number,
-      nameArabic: surahData.arabic,
+      number: String(surahData.number),
+      nameArabic: surahData.name_arabic,
       nameTransliteration: surahData.name_transliteration,
       nameTranslation: surahData.name_translation,
-      versesCount: surahData.verses_count,
+      versesCount: String(surahData.verses_count),
     };
   });
   return metadata;
@@ -81,7 +81,7 @@ const versesData = (() => {
     data: Data[] | null;
   }
 
-  const parsedVerses = versesJSON as Verses[];
+  const parsedVerses = versesJSON as unknown as Verses[];
   const parsedVersesData = parsedVerses[2]?.data;
 
   return parsedVersesData;
@@ -93,8 +93,8 @@ const verses = (() => {
   let surahIndex: number = 0;
   let ayahIndex: number = 0;
 
-  versesData.forEach((verseData) => {
-    const currentVerseCount = surahsMetadata[surahIndex].versesCount;
+  versesData?.forEach((verseData) => {
+    const currentVerseCount = Number(surahsMetadata[surahIndex]?.versesCount);
 
     if (surahIndex === 0 || surahIndex === 8) {
       if (ayahIndex === currentVerseCount) {
@@ -112,10 +112,10 @@ const verses = (() => {
       arabicEnglish[surahIndex] = [];
     }
 
-    arabicEnglish[surahIndex][ayahIndex] = {
+    arabicEnglish[surahIndex]![ayahIndex] = {
       arabic: verseData.arabic,
       english: verseData.english,
-      number: Number(verseData.verse),
+      number: verseData.verse,
     };
 
     ayahIndex += 1;
@@ -131,7 +131,7 @@ const verses2 = (() => {
   let ayahIndex: number = 0;
 
   for (let i = 0; i < arOriginal.length; i++) {
-    const currentVerseCount = surahsMetadata[surahIndex].versesCount;
+    const currentVerseCount = Number(surahsMetadata[surahIndex]?.versesCount);
     if (ayahIndex === currentVerseCount) {
       ayahIndex = 0;
       surahIndex += 1;
@@ -141,10 +141,10 @@ const verses2 = (() => {
       arabicEnglish[surahIndex] = [];
     }
 
-    arabicEnglish[surahIndex][ayahIndex] = {
-      arabic: arOriginal[i]?.text,
-      english: enWithNotes[i]?.text,
-      number: Number(arOriginal[i]?.ayah),
+    arabicEnglish[surahIndex]![ayahIndex] = {
+      arabic: arOriginal[i]?.text ?? "",
+      english: enWithNotes[i]?.text ?? "",
+      number: String(arOriginal[i]?.ayah),
     };
 
     ayahIndex += 1;
@@ -160,20 +160,20 @@ export function getVerse(
 ): Record<string, string>[] {
   const verses: Record<string, string>[] = [];
   if (verseEnd == undefined) {
-    verses[0] = verses2[chapter][verseBegin];
+    verses[0] = verses2[chapter]![verseBegin] ?? {};
     return verses;
   }
   for (let i = verseBegin; i <= verseEnd; i++) {
-    verses[i] = verses2[chapter][i];
+    verses[i] = verses2[chapter]![i] ?? {};
   }
   return verses;
 }
 
 export function getVerses(chapter: number): Record<string, string>[] {
-  return verses2[chapter];
+  return verses2[chapter] ?? [];
 }
 
-const binarySearch = (target, arr) => {
+const binarySearch = (target: number, arr: any[]) => {
   const arrLen = arr.length;
   let low = 0;
   let high = Number(arrLen - 1);
@@ -181,9 +181,9 @@ const binarySearch = (target, arr) => {
   while (low <= high) {
     mid = Math.floor((high + low) / 2);
     const str = notesEN[mid]?.index;
-    const [surah, ayah, index] = str.split(":");
+    const [surah, ayah, index] = str?.split(":") ?? [];
     const guess = Number(
-      `${surah}${ayah.padStart(3, "0")}${index.padStart(2, "0")}`,
+      `${surah}${ayah?.padStart(3, "0")}${index?.padStart(2, "0")}`,
     );
     if (guess == target) return mid;
     if (guess > target) high = mid - 1;
@@ -192,7 +192,7 @@ const binarySearch = (target, arr) => {
   return -1;
 };
 
-const notes = (surah, ayah, index) => {
+const notes = (surah: number, ayah: number, index: number) => {
   const parts = [
     surah,
     String(ayah).padStart(3, "0"),
@@ -210,13 +210,13 @@ export function getNote(
   index: number,
 ): string | undefined {
   let note = notes(surah, ayah, index);
-  if (referenceOtherNote(note)) {
-    const [s, a, i] = note.split(":");
+  if (referenceOtherNote(note ?? "")) {
+    const [s, a, i] = note?.split(":") ?? [];
     note = notes(Number(s), Number(a), Number(i));
   }
   return note;
 }
 
-const referenceOtherNote = (str): boolean => {
+const referenceOtherNote = (str: string): boolean => {
   return /^\d+:\d+:\d+$/.test(str);
 };

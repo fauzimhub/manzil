@@ -46,7 +46,6 @@ export const VerseEnglish = ({
 
 interface VerseActivableNotesProps {
   activeNotes: activeNote[];
-  chapter: number;
   verseNumber: number;
   setActiveNotes: Dispatch<SetStateAction<activeNote[]>>;
   pushPopup: (aIndex: string) => void;
@@ -93,24 +92,25 @@ export const VerseActivableNotes = ({
   );
 };
 
-const toggleNote = (chapter, verseNumber, supIndex) => (prev) => {
-  const exists = prev.find(
-    (n) => n.index === verseNumber && n.supIndex === supIndex,
-  );
-  if (exists) {
-    return prev.filter(
-      (n) => !(n.index === verseNumber && n.supIndex === supIndex),
+const toggleNote =
+  (chapter: number, verseNumber: number, supIndex: number) => (prev) => {
+    const exists = prev.find(
+      (n) => n.index === verseNumber && n.supIndex === supIndex,
     );
-  }
-  return [
-    ...prev,
-    {
-      index: verseNumber,
-      supIndex,
-      text: getNote(chapter, verseNumber, supIndex),
-    },
-  ].sort((a, b) => a.supIndex - b.supIndex);
-};
+    if (exists) {
+      return prev.filter(
+        (n) => !(n.index === verseNumber && n.supIndex === supIndex),
+      );
+    }
+    return [
+      ...prev,
+      {
+        index: verseNumber,
+        supIndex,
+        text: getNote(chapter, verseNumber, supIndex),
+      },
+    ].sort((a, b) => a.supIndex - b.supIndex);
+  };
 
 interface VersePopupProps {
   popupStack: {
@@ -180,12 +180,12 @@ export const VersePopup = ({
           <button onClick={clearPopup}>×</button>
         </div>
         <div className="reading-popup-body" ref={bodyRef}>
-          {currentPopup.verses.map((verse, i) => (
+          {currentPopup?.verses.map((verse, i) => (
             <Fragment key={i}>
               <div className="verse-row">
                 <VerseArabic arabic={verse.arabic} />
                 <VerseEnglish
-                  chapter={currentPopup.surah}
+                  chapter={currentPopup?.surah}
                   verseNumber={verse.number}
                   english={verse.english}
                   setActiveNotes={setActiveNotes}
@@ -206,7 +206,7 @@ export const VersePopup = ({
   );
 };
 
-export const togglePopup = (aIndex) => {
+export const togglePopup = (aIndex: string) => {
   const isSingle = /^\d+:\d+$/.test(aIndex);
   const isRange = /^\d+:\d+-\d+$/.test(aIndex);
   let versesPopup;
@@ -218,7 +218,7 @@ export const togglePopup = (aIndex) => {
     versesPopup = getVerse(surahNum - 1, Number(ayah) - 1);
   } else if (isRange) {
     const [surah, ayah] = aIndex.split(":");
-    const [ayahBegin, ayahEnd] = ayah.split("-");
+    const [ayahBegin, ayahEnd] = ayah?.split("-") ?? [];
     surahNum = Number(surah);
     versesPopup = getVerse(
       surahNum - 1,
