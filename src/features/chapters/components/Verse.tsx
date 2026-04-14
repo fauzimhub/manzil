@@ -149,32 +149,10 @@ export const VersePopup = ({
     }
   }, [currentPopup]);
 
-  const overlayRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = overlayRef.current;
-    if (!el) return;
-
-    const prevent = (e: WheelEvent) => {
-      const body = bodyRef.current;
-      if (!body) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = body;
-      const atTop = scrollTop === 0 && e.deltaY < 0;
-      const atBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0;
-
-      if (atTop || atBottom) {
-        e.preventDefault();
-      }
-    };
-
-    el.addEventListener("wheel", prevent, { passive: false });
-    return () => el.removeEventListener("wheel", prevent);
-  }, [popupStack.length]);
-
   if (popupStack.length === 0) return null;
 
   return createPortal(
-    <div className="overlay" ref={overlayRef} onClick={popPopup}>
+    <div className="overlay" onClick={popPopup}>
       <div className="reading-popup" onClick={(e) => e.stopPropagation()}>
         <div className="reading-popup-header">
           {popupStack.length > 1 && <button onClick={popPopup}>← back</button>}
