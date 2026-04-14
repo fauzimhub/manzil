@@ -140,12 +140,15 @@ export const VersePopup = ({
     setActiveNotes([]);
   }, [popupStack.length]);
 
+  const currentPopup = popupStack.at(-1);
+
   const bodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (bodyRef.current) {
       bodyRef.current.scrollTop = 0;
     }
-  }, [activeNotes]);
+  }, [currentPopup]);
+
   const overlayRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = overlayRef.current;
@@ -169,8 +172,6 @@ export const VersePopup = ({
   }, [popupStack.length]);
 
   if (popupStack.length === 0) return null;
-
-  const currentPopup = popupStack.at(-1);
 
   return createPortal(
     <div className="overlay" ref={overlayRef} onClick={popPopup}>
