@@ -57,12 +57,20 @@ export const VerseActivableNotes = ({
   setActiveNotes,
   pushPopup,
 }: VerseActivableNotesProps) => {
+  const noteRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    noteRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [activeNotes]);
   return (
     <>
       {activeNotes
         .filter((n) => n.index === verseNumber)
         .map((n) => (
-          <div className="footnote-bar" key={`${n.index}-${n.supIndex}`}>
+          <div
+            ref={noteRef}
+            className="footnote-bar"
+            key={`${n.index}-${n.supIndex}`}
+          >
             <span
               dangerouslySetInnerHTML={{ __html: n.text }}
               onClick={(e) => {
