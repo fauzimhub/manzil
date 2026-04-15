@@ -46,6 +46,7 @@ export const VerseEnglish = ({
 
 interface VerseActivableNotesProps {
   activeNotes: activeNote[];
+  chapter: number;
   verseNumber: number;
   setActiveNotes: Dispatch<SetStateAction<activeNote[]>>;
   pushPopup: (aIndex: string) => void;
@@ -53,6 +54,7 @@ interface VerseActivableNotesProps {
 
 export const VerseActivableNotes = ({
   activeNotes,
+  chapter,
   verseNumber,
   setActiveNotes,
   pushPopup,
@@ -64,12 +66,12 @@ export const VerseActivableNotes = ({
   return (
     <>
       {activeNotes
-        .filter((n) => n.index === verseNumber)
+        .filter((n) => n.verseIndex === verseNumber && n.surahIndex === chapter)
         .map((n) => (
           <div
             ref={noteRef}
             className="footnote-bar"
-            key={`${n.index}-${n.supIndex}`}
+            key={`${n.surahIndex}-${n.verseIndex}-${n.supIndex}`}
           >
             <span
               dangerouslySetInnerHTML={{ __html: n.text }}
@@ -87,7 +89,12 @@ export const VerseActivableNotes = ({
               onClick={() =>
                 setActiveNotes((prev) =>
                   prev.filter(
-                    (p) => !(p.index === n.index && p.supIndex === n.supIndex),
+                    (p) =>
+                      !(
+                        p.surahIndex === n.surahIndex &&
+                        p.verseIndex === n.verseIndex &&
+                        p.supIndex === n.supIndex
+                      ),
                   ),
                 )
               }
@@ -103,17 +110,26 @@ export const VerseActivableNotes = ({
 const toggleNote =
   (chapter: number, verseNumber: number, supIndex: number) => (prev) => {
     const exists = prev.find(
-      (n) => n.index === verseNumber && n.supIndex === supIndex,
+      (n) =>
+        n.verseIndex === verseNumber &&
+        n.surahIndex === chapter &&
+        n.supIndex === supIndex,
     );
     if (exists) {
       return prev.filter(
-        (n) => !(n.index === verseNumber && n.supIndex === supIndex),
+        (n) =>
+          !(
+            n.verseIndex === verseNumber &&
+            n.surahIndex === chapter &&
+            n.supIndex === supIndex
+          ),
       );
     }
     return [
       ...prev,
       {
-        index: verseNumber,
+        surahIndex: chapter,
+        verseIndex: verseNumber,
         supIndex,
         text: getNote(chapter, verseNumber, supIndex),
       },
@@ -138,7 +154,8 @@ export const VersePopup = ({
 }: VersePopupProps) => {
   const [activeNotes, setActiveNotes] = useState<
     {
-      index: number;
+      surahIndex: number;
+      verseIndex: number;
       supIndex: number;
       text: string;
     }[]
@@ -180,6 +197,7 @@ export const VersePopup = ({
               </div>
               <VerseActivableNotes
                 activeNotes={activeNotes}
+                chapter={currentPopup?.surah}
                 verseNumber={verse.number}
                 setActiveNotes={setActiveNotes}
                 pushPopup={pushPopup}

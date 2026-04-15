@@ -52,7 +52,8 @@ interface VersesProps {
 const Verses = ({ chapter, pageIndex }: VersesProps) => {
   const [activeNotes, setActiveNotes] = useState<
     {
-      index: number;
+      surahIndex: number;
+      verseIndex: number;
       supIndex: number;
       text: string;
     }[]
@@ -101,6 +102,7 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
             </p>
             <VerseActivableNotes
               activeNotes={activeNotes}
+              chapter={chapter}
               verseNumber={Number(verse.number) || 0}
               setActiveNotes={setActiveNotes}
               pushPopup={pushPopup}
