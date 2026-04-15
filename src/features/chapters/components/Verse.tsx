@@ -144,9 +144,9 @@ export const VersePopup = ({
     }[]
   >([]);
 
-  useEffect(() => {
-    setActiveNotes([]);
-  }, [popupStack.length]);
+  /* useEffect(() => {
+   *   setActiveNotes([]);
+   * }, [popupStack.length]); */
 
   const currentPopup = popupStack.at(-1);
 
