@@ -2,7 +2,7 @@
   font-family: "AmiriQuran";
   src:
     local("AmiriQuran"),
-    url(./assets/fonts/AmiriQuran.woff) format("woff");
+    url(./assets/fonts/AmiriQuran.ttf) format("truetype");
 }
 
 .verse-row {
