@@ -43,7 +43,7 @@ export const Bismillah = ({ pageIndex, chapter }: BismillahProps) => {
   );
 };
 
-const getBismillah = () => {
+export const getBismillah = () => {
   const verses = getVerses(0);
   return verses[0];
 };

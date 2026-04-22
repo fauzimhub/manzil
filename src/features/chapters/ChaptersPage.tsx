@@ -2,7 +2,7 @@ import "./chapters.css";
 import { useSearchParams, Link } from "react-router-dom";
 import { getVerses, surahsMetadata } from "../../shared/scripts";
 import React, { Fragment, useEffect, useState } from "react";
-import { Bismillah } from "./components/Bismillah.tsx";
+import { Bismillah, getBismillah } from "./components/Bismillah.tsx";
 import {
   VerseArabic,
   VerseEnglish,
@@ -32,7 +32,7 @@ export function ChaptersPage() {
         <Link to={`/`}> Home </Link>
       </p>
 
-      <Bismillah pageIndex={pageIndex} chapter={chapter} />
+      {/* <Bismillah pageIndex={pageIndex} chapter={chapter} /> */}
 
       <Verses chapter={chapter} pageIndex={pageIndex} />
 
@@ -51,6 +51,15 @@ interface VersesProps {
 
 const Verses = ({ chapter, pageIndex }: VersesProps) => {
   const [activeNotes, setActiveNotes] = useState<
+    {
+      surahIndex: number;
+      verseIndex: number;
+      supIndex: number;
+      text: string;
+    }[]
+  >([]);
+
+  const [activeBismillahNotes, setActiveBismillahNotes] = useState<
     {
       surahIndex: number;
       verseIndex: number;
@@ -81,13 +90,35 @@ const Verses = ({ chapter, pageIndex }: VersesProps) => {
 
   useEffect(() => {
     setActiveNotes([]);
+    setActiveBismillahNotes([]);
     setPopupStack([]);
   }, [chapter, pageIndex.start]);
 
   const verses = getVerses(chapter - 1);
+  const bismillah = getBismillah();
 
   return (
     <>
+      {pageIndex.start === 0 && chapter !== 1 && chapter !== 9 && (
+        <p className={`verse-row`}>
+          <VerseArabic arabic={bismillah.arabic ?? ""} />
+          <VerseEnglish
+            chapter={1}
+            verseNumber={1}
+            english={bismillah.english ?? ""}
+            setActiveNotes={setActiveBismillahNotes}
+          />
+        </p>
+      )}
+
+      <VerseActivableNotes
+        activeNotes={activeBismillahNotes}
+        chapter={1}
+        verseNumber={1}
+        setActiveNotes={setActiveBismillahNotes}
+        pushPopup={pushPopup}
+      />
+
       {verses.slice(pageIndex.start, pageIndex.end).map((verse) => {
         return (
           <Fragment key={`${chapter}-${verse.number}`}>
