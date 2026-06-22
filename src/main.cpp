@@ -1,8 +1,13 @@
-#include <iostream>
+#include <wx/wx.h>
 
-using std::cout;
+class MyApp : public wxApp {
+public:
+  bool OnInit() override {
+    auto *frame =
+        new wxFrame(nullptr, wxID_ANY, "All your codebase are belong to us");
+    frame->Show();
+    return true;
+  }
+};
 
-int main() {
-  cout << "Hello, World!";
-  return 0;
-}
+wxIMPLEMENT_APP(MyApp);
