@@ -1,0 +1,4 @@
+Checks: "bugprone-*,modernize-*,readability-*,performance-*,portability-*,clang-analyzer-*,-modernize-use-trailing-return-type"
+WarningsAsErrors: ""
+HeaderFilterRegex: ""
+FormatStyle: none
