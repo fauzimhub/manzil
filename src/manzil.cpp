@@ -34,9 +34,21 @@ bool manzil::App::OnInit() {
 
   cout << surah << "\n";
 
-  auto* frame = new wxFrame(nullptr, wxID_ANY, title);
+  auto* frame = new manzil::Frame(title);
 
   frame->Show();
 
   return true;
 }
+
+BEGIN_EVENT_TABLE(manzil::Frame, wxFrame)
+EVT_MENU(wxID_ABOUT, manzil::Frame::OnAbout)
+EVT_MENU(wxID_EXIT, manzil::Frame::OnQuit)
+END_EVENT_TABLE()
+
+manzil::Frame::Frame(const wxString& title)
+    : wxFrame(nullptr, wxID_ANY, title) {}
+
+void manzil::Frame::OnAbout(wxCommandEvent& event) {}
+
+void manzil::Frame::OnQuit(wxCommandEvent& event) {}
