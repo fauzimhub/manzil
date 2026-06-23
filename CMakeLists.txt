@@ -11,17 +11,15 @@ set(wxBUILD_SHARED OFF) # static linking
 set(wxBUILD_TESTS OFF)
 set(wxBUILD_SAMPLES OFF)
 set(wxBUILD_DEMOS OFF)
+set(JSON_BuildTests OFF)
 
 add_subdirectory(third_party/wxwidgets)
+add_subdirectory(third_party/json)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE wx::core wx::base)
-
-target_include_directories(
-  ${PROJECT_NAME}
-  SYSTEM
-  PRIVATE "${CMAKE_SOURCE_DIR}/third_party/wxwidgets/include")
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 target_compile_options(
   ${PROJECT_NAME}
