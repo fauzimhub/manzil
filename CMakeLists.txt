@@ -21,6 +21,11 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE wx::core wx::base)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
+target_include_directories(
+  ${PROJECT_NAME}
+  SYSTEM
+  PRIVATE "${CMAKE_SOURCE_DIR}/third_party/wxwidgets/include")
+
 target_compile_options(
   ${PROJECT_NAME}
   PRIVATE
