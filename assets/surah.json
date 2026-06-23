@@ -1,0 +1,801 @@
+[
+    {
+      "number": 1,
+      "name_arabic": "الفاتحة",
+      "name_transliteration": "Al-Fatihah",
+      "name_translation": "The Opening",
+      "verses_count": 7
+    },
+    {
+      "number": 2,
+      "name_arabic": "البقرة",
+      "name_transliteration": "Al-Baqarah",
+      "name_translation": "The Cow",
+      "verses_count": 286
+    },
+    {
+      "number": 3,
+      "name_arabic": "آل عمران",
+      "name_transliteration": "Ali 'Imran",
+      "name_translation": "Family of Imran",
+      "verses_count": 200
+    },
+    {
+      "number": 4,
+      "name_arabic": "النساء",
+      "name_transliteration": "An-Nisa",
+      "name_translation": "The Women",
+      "verses_count": 176
+    },
+    {
+      "number": 5,
+      "name_arabic": "المائدة",
+      "name_transliteration": "Al-Ma'idah",
+      "name_translation": "The Table Spread",
+      "verses_count": 120
+    },
+    {
+      "number": 6,
+      "name_arabic": "الأنعام",
+      "name_transliteration": "Al-An'am",
+      "name_translation": "The Cattle",
+      "verses_count": 165
+    },
+    {
+      "number": 7,
+      "name_arabic": "الأعراف",
+      "name_transliteration": "Al-A'raf",
+      "name_translation": "The Heights",
+      "verses_count": 206
+    },
+    {
+      "number": 8,
+      "name_arabic": "الأنفال",
+      "name_transliteration": "Al-Anfal",
+      "name_translation": "The Spoils of War",
+      "verses_count": 75
+    },
+    {
+      "number": 9,
+      "name_arabic": "التوبة",
+      "name_transliteration": "At-Tawbah",
+      "name_translation": "The Repentance",
+      "verses_count": 129
+    },
+    {
+      "number": 10,
+      "name_arabic": "يونس",
+      "name_transliteration": "Yunus",
+      "name_translation": "Jonah",
+      "verses_count": 109
+    },
+    {
+      "number": 11,
+      "name_arabic": "هود",
+      "name_transliteration": "Hud",
+      "name_translation": "Hud",
+      "verses_count": 123
+    },
+    {
+      "number": 12,
+      "name_arabic": "يوسف",
+      "name_transliteration": "Yusuf",
+      "name_translation": "Joseph",
+      "verses_count": 111
+    },
+    {
+      "number": 13,
+      "name_arabic": "الرعد",
+      "name_transliteration": "Ar-Ra'd",
+      "name_translation": "The Thunder",
+      "verses_count": 43
+    },
+    {
+      "number": 14,
+      "name_arabic": "ابراهيم",
+      "name_transliteration": "Ibrahim",
+      "name_translation": "Abraham",
+      "verses_count": 52
+    },
+    {
+      "number": 15,
+      "name_arabic": "الحجر",
+      "name_transliteration": "Al-Hijr",
+      "name_translation": "The Rocky Tract",
+      "verses_count": 99
+    },
+    {
+      "number": 16,
+      "name_arabic": "النحل",
+      "name_transliteration": "An-Nahl",
+      "name_translation": "The Bee",
+      "verses_count": 128
+    },
+    {
+      "number": 17,
+      "name_arabic": "الإسراء",
+      "name_transliteration": "Al-Isra",
+      "name_translation": "The Night Journey",
+      "verses_count": 111
+    },
+    {
+      "number": 18,
+      "name_arabic": "الكهف",
+      "name_transliteration": "Al-Kahf",
+      "name_translation": "The Cave",
+      "verses_count": 110
+    },
+    {
+      "number": 19,
+      "name_arabic": "مريم",
+      "name_transliteration": "Maryam",
+      "name_translation": "Mary",
+      "verses_count": 98
+    },
+    {
+      "number": 20,
+      "name_arabic": "طه",
+      "name_transliteration": "Taha",
+      "name_translation": "Ta-Ha",
+      "verses_count": 135
+    },
+    {
+      "number": 21,
+      "name_arabic": "الأنبياء",
+      "name_transliteration": "Al-Anbya",
+      "name_translation": "The Prophets",
+      "verses_count": 112
+    },
+    {
+      "number": 22,
+      "name_arabic": "الحج",
+      "name_transliteration": "Al-Hajj",
+      "name_translation": "The Pilgrimage",
+      "verses_count": 78
+    },
+    {
+      "number": 23,
+      "name_arabic": "المؤمنون",
+      "name_transliteration": "Al-Mu'minun",
+      "name_translation": "The Believers",
+      "verses_count": 118
+    },
+    {
+      "number": 24,
+      "name_arabic": "النور",
+      "name_transliteration": "An-Nur",
+      "name_translation": "The Light",
+      "verses_count": 64
+    },
+    {
+      "number": 25,
+      "name_arabic": "الفرقان",
+      "name_transliteration": "Al-Furqan",
+      "name_translation": "The Criterion",
+      "verses_count": 77
+    },
+    {
+      "number": 26,
+      "name_arabic": "الشعراء",
+      "name_transliteration": "Ash-Shu'ara",
+      "name_translation": "The Poets",
+      "verses_count": 227
+    },
+    {
+      "number": 27,
+      "name_arabic": "النمل",
+      "name_transliteration": "An-Naml",
+      "name_translation": "The Ant",
+      "verses_count": 93
+    },
+    {
+      "number": 28,
+      "name_arabic": "القصص",
+      "name_transliteration": "Al-Qasas",
+      "name_translation": "The Stories",
+      "verses_count": 88
+    },
+    {
+      "number": 29,
+      "name_arabic": "العنكبوت",
+      "name_transliteration": "Al-'Ankabut",
+      "name_translation": "The Spider",
+      "verses_count": 69
+    },
+    {
+      "number": 30,
+      "name_arabic": "الروم",
+      "name_transliteration": "Ar-Rum",
+      "name_translation": "The Romans",
+      "verses_count": 60
+    },
+    {
+      "number": 31,
+      "name_arabic": "لقمان",
+      "name_transliteration": "Luqman",
+      "name_translation": "Luqman",
+      "verses_count": 34
+    },
+    {
+      "number": 32,
+      "name_arabic": "السجدة",
+      "name_transliteration": "As-Sajdah",
+      "name_translation": "The Prostration",
+      "verses_count": 30
+    },
+    {
+      "number": 33,
+      "name_arabic": "الأحزاب",
+      "name_transliteration": "Al-Ahzab",
+      "name_translation": "The Combined Forces",
+      "verses_count": 73
+    },
+    {
+      "number": 34,
+      "name_arabic": "سبإ",
+      "name_transliteration": "Saba",
+      "name_translation": "Sheba",
+      "verses_count": 54
+    },
+    {
+      "number": 35,
+      "name_arabic": "فاطر",
+      "name_transliteration": "Fatir",
+      "name_translation": "Originator",
+      "verses_count": 45
+    },
+    {
+      "number": 36,
+      "name_arabic": "يس",
+      "name_transliteration": "Ya-Sin",
+      "name_translation": "Ya Sin",
+      "verses_count": 83
+    },
+    {
+      "number": 37,
+      "name_arabic": "الصافات",
+      "name_transliteration": "As-Saffat",
+      "name_translation": "Those who set the Ranks",
+      "verses_count": 182
+    },
+    {
+      "number": 38,
+      "name_arabic": "ص",
+      "name_transliteration": "Sad",
+      "name_translation": "The Letter Saad",
+      "verses_count": 88
+    },
+    {
+      "number": 39,
+      "name_arabic": "الزمر",
+      "name_transliteration": "Az-Zumar",
+      "name_translation": "The Troops",
+      "verses_count": 75
+    },
+    {
+      "number": 40,
+      "name_arabic": "غافر",
+      "name_transliteration": "Ghafir",
+      "name_translation": "The Forgiver",
+      "verses_count": 85
+    },
+    {
+      "number": 41,
+      "name_arabic": "فصلت",
+      "name_transliteration": "Fussilat",
+      "name_translation": "Explained in Detail",
+      "verses_count": 54
+    },
+    {
+      "number": 42,
+      "name_arabic": "الشورى",
+      "name_transliteration": "Ash-Shuraa",
+      "name_translation": "The Consultation",
+      "verses_count": 53
+    },
+    {
+      "number": 43,
+      "name_arabic": "الزخرف",
+      "name_transliteration": "Az-Zukhruf",
+      "name_translation": "The Ornaments of Gold",
+      "verses_count": 89
+    },
+    {
+      "number": 44,
+      "name_arabic": "الدخان",
+      "name_transliteration": "Ad-Dukhan",
+      "name_translation": "The Smoke",
+      "verses_count": 59
+    },
+    {
+      "number": 45,
+      "name_arabic": "الجاثية",
+      "name_transliteration": "Al-Jathiyah",
+      "name_translation": "The Crouching",
+      "verses_count": 37
+    },
+    {
+      "number": 46,
+      "name_arabic": "الأحقاف",
+      "name_transliteration": "Al-Ahqaf",
+      "name_translation": "The Wind-Curved Sandhills",
+      "verses_count": 35
+    },
+    {
+      "number": 47,
+      "name_arabic": "محمد",
+      "name_transliteration": "Muhammad",
+      "name_translation": "Muhammad",
+      "verses_count": 38
+    },
+    {
+      "number": 48,
+      "name_arabic": "الفتح",
+      "name_transliteration": "Al-Fath",
+      "name_translation": "The Victory",
+      "verses_count": 29
+    },
+    {
+      "number": 49,
+      "name_arabic": "الحجرات",
+      "name_transliteration": "Al-Hujurat",
+      "name_translation": "The Rooms",
+      "verses_count": 18
+    },
+    {
+      "number": 50,
+      "name_arabic": "ق",
+      "name_transliteration": "Qaf",
+      "name_translation": "The Letter Qaf",
+      "verses_count": 45
+    },
+    {
+      "number": 51,
+      "name_arabic": "الذاريات",
+      "name_transliteration": "Adh-Dhariyat",
+      "name_translation": "The Winnowing Winds",
+      "verses_count": 60
+    },
+    {
+      "number": 52,
+      "name_arabic": "الطور",
+      "name_transliteration": "At-Tur",
+      "name_translation": "The Mount",
+      "verses_count": 49
+    },
+    {
+      "number": 53,
+      "name_arabic": "النجم",
+      "name_transliteration": "An-Najm",
+      "name_translation": "The Star",
+      "verses_count": 62
+    },
+    {
+      "number": 54,
+      "name_arabic": "القمر",
+      "name_transliteration": "Al-Qamar",
+      "name_translation": "The Moon",
+      "verses_count": 55
+    },
+    {
+      "number": 55,
+      "name_arabic": "الرحمن",
+      "name_transliteration": "Ar-Rahman",
+      "name_translation": "The Beneficent",
+      "verses_count": 78
+    },
+    {
+      "number": 56,
+      "name_arabic": "الواقعة",
+      "name_transliteration": "Al-Waqi'ah",
+      "name_translation": "The Inevitable",
+      "verses_count": 96
+    },
+    {
+      "number": 57,
+      "name_arabic": "الحديد",
+      "name_transliteration": "Al-Hadid",
+      "name_translation": "The Iron",
+      "verses_count": 29
+    },
+    {
+      "number": 58,
+      "name_arabic": "المجادلة",
+      "name_transliteration": "Al-Mujadila",
+      "name_translation": "The Pleading Woman",
+      "verses_count": 22
+    },
+    {
+      "number": 59,
+      "name_arabic": "الحشر",
+      "name_transliteration": "Al-Hashr",
+      "name_translation": "The Exile",
+      "verses_count": 24
+    },
+    {
+      "number": 60,
+      "name_arabic": "الممتحنة",
+      "name_transliteration": "Al-Mumtahanah",
+      "name_translation": "She that is to be examined",
+      "verses_count": 13
+    },
+    {
+      "number": 61,
+      "name_arabic": "الصف",
+      "name_transliteration": "As-Saf",
+      "name_translation": "The Ranks",
+      "verses_count": 14
+    },
+    {
+      "number": 62,
+      "name_arabic": "الجمعة",
+      "name_transliteration": "Al-Jumu'ah",
+      "name_translation": "The Congregation",
+      "verses_count": 11
+    },
+    {
+      "number": 63,
+      "name_arabic": "المنافقون",
+      "name_transliteration": "Al-Munafiqun",
+      "name_translation": "The Hypocrites",
+      "verses_count": 11
+    },
+    {
+      "number": 64,
+      "name_arabic": "التغابن",
+      "name_transliteration": "At-Taghabun",
+      "name_translation": "The Mutual Disillusion",
+      "verses_count": 18
+    },
+    {
+      "number": 65,
+      "name_arabic": "الطلاق",
+      "name_transliteration": "At-Talaq",
+      "name_translation": "The Divorce",
+      "verses_count": 12
+    },
+    {
+      "number": 66,
+      "name_arabic": "التحريم",
+      "name_transliteration": "At-Tahrim",
+      "name_translation": "The Prohibition",
+      "verses_count": 12
+    },
+    {
+      "number": 67,
+      "name_arabic": "الملك",
+      "name_transliteration": "Al-Mulk",
+      "name_translation": "The Sovereignty",
+      "verses_count": 30
+    },
+    {
+      "number": 68,
+      "name_arabic": "القلم",
+      "name_transliteration": "Al-Qalam",
+      "name_translation": "The Pen",
+      "verses_count": 52
+    },
+    {
+      "number": 69,
+      "name_arabic": "الحاقة",
+      "name_transliteration": "Al-Haqqah",
+      "name_translation": "The Reality",
+      "verses_count": 52
+    },
+    {
+      "number": 70,
+      "name_arabic": "المعارج",
+      "name_transliteration": "Al-Ma'arij",
+      "name_translation": "The Ascending Stairways",
+      "verses_count": 44
+    },
+    {
+      "number": 71,
+      "name_arabic": "نوح",
+      "name_transliteration": "Nuh",
+      "name_translation": "Noah",
+      "verses_count": 28
+    },
+    {
+      "number": 72,
+      "name_arabic": "الجن",
+      "name_transliteration": "Al-Jinn",
+      "name_translation": "The Jinn",
+      "verses_count": 28
+    },
+    {
+      "number": 73,
+      "name_arabic": "المزمل",
+      "name_transliteration": "Al-Muzzammil",
+      "name_translation": "The Enshrouded One",
+      "verses_count": 20
+    },
+    {
+      "number": 74,
+      "name_arabic": "المدثر",
+      "name_transliteration": "Al-Muddaththir",
+      "name_translation": "The Cloaked One",
+      "verses_count": 56
+    },
+    {
+      "number": 75,
+      "name_arabic": "القيامة",
+      "name_transliteration": "Al-Qiyamah",
+      "name_translation": "The Resurrection",
+      "verses_count": 40
+    },
+    {
+      "number": 76,
+      "name_arabic": "الانسان",
+      "name_transliteration": "Al-Insan",
+      "name_translation": "The Man",
+      "verses_count": 31
+    },
+    {
+      "number": 77,
+      "name_arabic": "المرسلات",
+      "name_transliteration": "Al-Mursalat",
+      "name_translation": "The Emissaries",
+      "verses_count": 50
+    },
+    {
+      "number": 78,
+      "name_arabic": "النبإ",
+      "name_transliteration": "An-Naba",
+      "name_translation": "The Tidings",
+      "verses_count": 40
+    },
+    {
+      "number": 79,
+      "name_arabic": "النازعات",
+      "name_transliteration": "An-Nazi'at",
+      "name_translation": "Those who drag forth",
+      "verses_count": 46
+    },
+    {
+      "number": 80,
+      "name_arabic": "عبس",
+      "name_transliteration": "Abasa",
+      "name_translation": "He Frowned",
+      "verses_count": 42
+    },
+    {
+      "number": 81,
+      "name_arabic": "التكوير",
+      "name_transliteration": "At-Takwir",
+      "name_translation": "The Overthrowing",
+      "verses_count": 29
+    },
+    {
+      "number": 82,
+      "name_arabic": "الإنفطار",
+      "name_transliteration": "Al-Infitar",
+      "name_translation": "The Cleaving",
+      "verses_count": 19
+    },
+    {
+      "number": 83,
+      "name_arabic": "المطففين",
+      "name_transliteration": "Al-Mutaffifin",
+      "name_translation": "The Defrauding",
+      "verses_count": 36
+    },
+    {
+      "number": 84,
+      "name_arabic": "الإنشقاق",
+      "name_transliteration": "Al-Inshiqaq",
+      "name_translation": "The Sundering",
+      "verses_count": 25
+    },
+    {
+      "number": 85,
+      "name_arabic": "البروج",
+      "name_transliteration": "Al-Buruj",
+      "name_translation": "The Mansions of the Stars",
+      "verses_count": 22
+    },
+    {
+      "number": 86,
+      "name_arabic": "الطارق",
+      "name_transliteration": "At-Tariq",
+      "name_translation": "The Nightcommer",
+      "verses_count": 17
+    },
+    {
+      "number": 87,
+      "name_arabic": "الأعلى",
+      "name_transliteration": "Al-A'la",
+      "name_translation": "The Most High",
+      "verses_count": 19
+    },
+    {
+      "number": 88,
+      "name_arabic": "الغاشية",
+      "name_transliteration": "Al-Ghashiyah",
+      "name_translation": "The Overwhelming",
+      "verses_count": 26
+    },
+    {
+      "number": 89,
+      "name_arabic": "الفجر",
+      "name_transliteration": "Al-Fajr",
+      "name_translation": "The Dawn",
+      "verses_count": 30
+    },
+    {
+      "number": 90,
+      "name_arabic": "البلد",
+      "name_transliteration": "Al-Balad",
+      "name_translation": "The City",
+      "verses_count": 20
+    },
+    {
+      "number": 91,
+      "name_arabic": "الشمس",
+      "name_transliteration": "Ash-Shams",
+      "name_translation": "The Sun",
+      "verses_count": 15
+    },
+    {
+      "number": 92,
+      "name_arabic": "الليل",
+      "name_transliteration": "Al-Layl",
+      "name_translation": "The Night",
+      "verses_count": 21
+    },
+    {
+      "number": 93,
+      "name_arabic": "الضحى",
+      "name_transliteration": "Ad-Duhaa",
+      "name_translation": "The Morning Hours",
+      "verses_count": 11
+    },
+    {
+      "number": 94,
+      "name_arabic": "الشرح",
+      "name_transliteration": "Ash-Sharh",
+      "name_translation": "The Relief",
+      "verses_count": 8
+    },
+    {
+      "number": 95,
+      "name_arabic": "التين",
+      "name_transliteration": "At-Tin",
+      "name_translation": "The Fig",
+      "verses_count": 8
+    },
+    {
+      "number": 96,
+      "name_arabic": "العلق",
+      "name_transliteration": "Al-Alaq",
+      "name_translation": "The Clot",
+      "verses_count": 19
+    },
+    {
+      "number": 97,
+      "name_arabic": "القدر",
+      "name_transliteration": "Al-Qadr",
+      "name_translation": "The Power",
+      "verses_count": 5
+    },
+    {
+      "number": 98,
+      "name_arabic": "البينة",
+      "name_transliteration": "Al-Bayyinah",
+      "name_translation": "The Clear Proof",
+      "verses_count": 8
+    },
+    {
+      "number": 99,
+      "name_arabic": "الزلزلة",
+      "name_transliteration": "Az-Zalzalah",
+      "name_translation": "The Earthquake",
+      "verses_count": 8
+    },
+    {
+      "number": 100,
+      "name_arabic": "العاديات",
+      "name_transliteration": "Al-Adiyat",
+      "name_translation": "The Courser",
+      "verses_count": 11
+    },
+    {
+      "number": 101,
+      "name_arabic": "القارعة",
+      "name_transliteration": "Al-Qari'ah",
+      "name_translation": "The Calamity",
+      "verses_count": 11
+    },
+    {
+      "number": 102,
+      "name_arabic": "التكاثر",
+      "name_transliteration": "At-Takathur",
+      "name_translation": "The Rivalry in world increase",
+      "verses_count": 8
+    },
+    {
+      "number": 103,
+      "name_arabic": "العصر",
+      "name_transliteration": "Al-Asr",
+      "name_translation": "The Declining Day",
+      "verses_count": 3
+    },
+    {
+      "number": 104,
+      "name_arabic": "الهمزة",
+      "name_transliteration": "Al-Humazah",
+      "name_translation": "The Traducer",
+      "verses_count": 9
+    },
+    {
+      "number": 105,
+      "name_arabic": "الفيل",
+      "name_transliteration": "Al-Fil",
+      "name_translation": "The Elephant",
+      "verses_count": 5
+    },
+    {
+      "number": 106,
+      "name_arabic": "قريش",
+      "name_transliteration": "Quraysh",
+      "name_translation": "Quraysh",
+      "verses_count": 4
+    },
+    {
+      "number": 107,
+      "name_arabic": "الماعون",
+      "name_transliteration": "Al-Ma'un",
+      "name_translation": "The Small kindnesses",
+      "verses_count": 7
+    },
+    {
+      "number": 108,
+      "name_arabic": "الكوثر",
+      "name_transliteration": "Al-Kawthar",
+      "name_translation": "The Abundance",
+      "verses_count": 3
+    },
+    {
+      "number": 109,
+      "name_arabic": "الكافرون",
+      "name_transliteration": "Al-Kafirun",
+      "name_translation": "The Disbelievers",
+      "verses_count": 6
+    },
+    {
+      "number": 110,
+      "name_arabic": "النصر",
+      "name_transliteration": "An-Nasr",
+      "name_translation": "The Divine Support",
+      "verses_count": 3
+    },
+    {
+      "number": 111,
+      "name_arabic": "المسد",
+      "name_transliteration": "Al-Masad",
+      "name_translation": "The Palm Fiber",
+      "verses_count": 5
+    },
+    {
+      "number": 112,
+      "name_arabic": "الإخلاص",
+      "name_transliteration": "Al-Ikhlas",
+      "name_translation": "The Sincerity",
+      "verses_count": 4
+    },
+    {
+      "number": 113,
+      "name_arabic": "الفلق",
+      "name_transliteration": "Al-Falaq",
+      "name_translation": "The Daybreak",
+      "verses_count": 5
+    },
+    {
+      "number": 114,
+      "name_arabic": "الناس",
+      "name_transliteration": "An-Nas",
+      "name_translation": "Mankind",
+      "verses_count": 6
+    }
+  ]
+
