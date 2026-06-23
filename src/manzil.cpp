@@ -11,17 +11,28 @@ using string = std::string;
 using std::cout;
 
 bool manzil::App::OnInit() {
-  json data{};
+  json surah{};
   string title = "no title";
+  string surah_path = "assets/surah.json";
 
-  ifstream file{"assets/surah.json"};
-  if (file) {
-    data = json::parse(file);
-    title = data[0]["name_translation"].get<string>();
-    file.close();
+  ifstream file{surah_path};
+  if (file.is_open()) {
+    try {
+
+      surah = json::parse(file);
+      title = surah[0]["name_translation"].get<string>();
+
+    } catch (std::exception& e) {
+      std::cerr << "<< Manzil: encountered an error while trying to parse \""
+                << surah_path << "\"" << " as json" << ": "
+                << "\n"
+                << e.what() << "\n";
+    }
+  } else {
+    std::cerr << "<< Manzil: could not open \"" << surah_path << "\"\n";
   }
 
-  cout << data << "\n";
+  cout << surah << "\n";
 
   auto* frame = new wxFrame(nullptr, wxID_ANY, title);
 
