@@ -47,8 +47,29 @@ EVT_MENU(wxID_EXIT, manzil::Frame::OnQuit)
 END_EVENT_TABLE()
 
 manzil::Frame::Frame(const wxString& title)
-    : wxFrame(nullptr, wxID_ANY, title) {}
+    : wxFrame(nullptr, wxID_ANY, title) {
 
-void manzil::Frame::OnAbout(wxCommandEvent& event) {}
+  wxMenu* file_menu = new wxMenu;
+  wxMenu* help_menu = new wxMenu;
 
-void manzil::Frame::OnQuit(wxCommandEvent& event) {}
+  help_menu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
+  file_menu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
+  wxMenuBar* menu_bar = new wxMenuBar();
+  menu_bar->Append(file_menu, wxT("&File"));
+  menu_bar->Append(help_menu, wxT("&Help"));
+
+  SetMenuBar(menu_bar);
+
+  CreateStatusBar(2);
+  SetStatusText(wxT("Welcome to Manzil!"));
+}
+
+void manzil::Frame::OnAbout(wxCommandEvent& event) {
+  wxString msg;
+  msg.Printf(wxT("Hello and welcome to Manzil %s"), MANZIL_VERSION);
+  wxMessageBox(msg, wxT("About Minimal"), wxOK | wxICON_INFORMATION, this);
+}
+
+void manzil::Frame::OnQuit(wxCommandEvent& event) {
+  Close();
+}
