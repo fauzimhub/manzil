@@ -28,6 +28,10 @@ target_link_libraries(
   ${EXECUTABLE_NAME}
   PRIVATE wx::core wx::base nlohmann_json::nlohmann_json)
 
+target_compile_definitions(
+  ${EXECUTABLE_NAME}
+  PRIVATE MANZIL_VERSION="${PROJECT_VERSION}")
+
 target_compile_options(
   ${EXECUTABLE_NAME}
   PRIVATE
