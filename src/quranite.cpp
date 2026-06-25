@@ -11,7 +11,7 @@ using json = nlohmann::json;
 using ifstream = std::ifstream;
 using std::cerr;
 
-manzil::Quranite::Quranite(string surah_path) {
+manzil::Quranite::Quranite(string& surah_path) {
   json parsed_surah{};
   ifstream file{surah_path};
   if (file.is_open()) {

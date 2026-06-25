@@ -7,11 +7,11 @@
 using string = std::string;
 
 struct surah {
-  int number;
-  string name_arabic;
-  string name_transliteration;
-  string name_translation;
-  int verses_count;
+  int number = 0;
+  string name_arabic = "noname";
+  string name_transliteration = "noname";
+  string name_translation = "noname";
+  int verses_count = 0;
 };
 
 using vsurah = std::vector<surah>;
@@ -20,12 +20,12 @@ namespace manzil {
 
 class Quranite {
  private:
-  vsurah surah_{};
+  vsurah surah_{0};
 
  public:
-  Quranite(string surah_path);
+  explicit Quranite(string& surah_path);
 
-  vsurah getSurah() { return surah_; }
+  [[nodiscard]] const vsurah& getSurah() const { return surah_; }
 };
 
 }  // namespace manzil

@@ -14,12 +14,13 @@ bool manzil::App::OnInit() {
 
   auto* quranite = new manzil::Quranite(surah_path);
 
-  for (const auto& sur : quranite->getSurah())
+  for (const auto& sur : quranite->getSurah()) {
     cout << "Surah (Number: " << sur.number
          << ", Name Arabic: " << sur.name_arabic
          << ", Name Translation: " << sur.name_translation
          << ", Name Transliteration: " << sur.name_transliteration
          << ", Verses Count: " << sur.verses_count << ")" << "\n";
+  }
 
   auto* frame = new wxFrame(nullptr, wxID_ANY, title);
 
