@@ -9,6 +9,7 @@
 using string = std::string;
 using json = nlohmann::json;
 using ifstream = std::ifstream;
+using exception = std::exception;
 using std::cerr;
 
 manzil::Quranite::Quranite(string& surah_path) {
@@ -19,7 +20,7 @@ manzil::Quranite::Quranite(string& surah_path) {
 
       parsed_surah = json::parse(file);
 
-    } catch (std::exception& e) {
+    } catch (exception& e) {
       cerr << "<< Manzil: encountered an error while trying to parse \""
            << surah_path << "\"" << " as json" << ": "
            << "\n"
