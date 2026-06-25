@@ -24,9 +24,11 @@ manzil::Quranite::Quranite(string& surah_path) {
            << surah_path << "\"" << " as json" << ": "
            << "\n"
            << e.what() << "\n";
+      exit(1);
     }
   } else {
     cerr << "<< Manzil: could not open \"" << surah_path << "\"\n";
+    exit(1);
   }
 
   for (const auto& parsed : parsed_surah) {
