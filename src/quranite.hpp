@@ -20,7 +20,7 @@ namespace manzil {
 
 class Quranite {
  private:
-  vsurah surah_;
+  vsurah surah_{};
 
  public:
   Quranite(string surah_path);
