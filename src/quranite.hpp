@@ -20,6 +20,7 @@ namespace manzil {
 
 class Quranite {
  private:
+  // empty; size explicitly 0 to satisfy -Weffc++ and clang-tidy
   vsurah surah_{0};
 
  public:
