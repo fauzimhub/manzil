@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+#include "components/frame.hpp"
 #include "manzil.hpp"
 #include "quranite.hpp"
 
@@ -22,7 +23,7 @@ bool manzil::App::OnInit() {
          << ", Verses Count: " << sur.verses_count << ")" << "\n";
   }
 
-  auto* frame = new wxFrame(nullptr, wxID_ANY, title);
+  auto* frame = new Frame(title);
 
   frame->Show();
 
