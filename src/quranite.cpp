@@ -32,6 +32,7 @@ manzil::Quranite::Quranite(string& surah_path) {
     exit(1);
   }
 
+  // surah_count is compile time const on quranite.hpp
   constexpr int expected_count = surah_count;
   if (parsed_surah.size() != expected_count) {
     cerr << "<< Manzil: expected " << expected_count << " surahs parsed, got "
@@ -39,7 +40,6 @@ manzil::Quranite::Quranite(string& surah_path) {
     exit(1);
   }
 
-  // surah_count is compile time const on quranite.hpp
   for (uint i = 0; i < surah_count; i++) {
     surah foo{};
     foo.number = parsed_surah[i]["number"].get<int>();
