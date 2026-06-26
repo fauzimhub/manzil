@@ -32,13 +32,22 @@ manzil::Quranite::Quranite(string& surah_path) {
     exit(1);
   }
 
-  for (const auto& parsed : parsed_surah) {
+  constexpr int expected_count = surah_count;
+  if (parsed_surah.size() != expected_count) {
+    cerr << "<< Manzil: expected " << expected_count << " surahs parsed, got "
+         << parsed_surah.size() << " instead" << "\n";
+    exit(1);
+  }
+
+  // surah_count is compile time const on quranite.hpp
+  for (uint i = 0; i < surah_count; i++) {
     surah foo{};
-    foo.number = parsed["number"].get<int>();
-    foo.name_arabic = parsed["name_arabic"].get<string>();
-    foo.name_translation = parsed["name_translation"].get<string>();
-    foo.name_transliteration = parsed["name_transliteration"].get<string>();
-    foo.verses_count = parsed["verses_count"].get<int>();
-    surah_.push_back(foo);
+    foo.number = parsed_surah[i]["number"].get<int>();
+    foo.name_arabic = parsed_surah[i]["name_arabic"].get<string>();
+    foo.name_translation = parsed_surah[i]["name_translation"].get<string>();
+    foo.name_transliteration =
+        parsed_surah[i]["name_transliteration"].get<string>();
+    foo.verses_count = parsed_surah[i]["verses_count"].get<int>();
+    surah_[i] = foo;
   }
 }
