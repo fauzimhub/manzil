@@ -17,8 +17,14 @@ set(JSON_BuildTests OFF)
 add_subdirectory(third_party/wxwidgets)
 add_subdirectory(third_party/json)
 
-add_executable(${EXECUTABLE_NAME} src/main.cpp src/manzil.cpp src/quranite.cpp
-               src/components/frame.cpp src/components/about_dialog.cpp)
+add_executable(
+  ${EXECUTABLE_NAME}
+  src/main.cpp
+  src/manzil.cpp
+  src/components/quranite.cpp
+  src/components/frame.cpp
+  src/components/about_dialog.cpp
+  src/components/surah_card.cpp)
 
 target_include_directories(
   ${EXECUTABLE_NAME}
