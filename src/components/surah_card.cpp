@@ -17,6 +17,7 @@ SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
       verses_(move(verses)) {
 
   UpdateMinSize();
+  SetCursor(wxCursor(wxCURSOR_HAND));
 
   Bind(wxEVT_PAINT, &SurahCard::OnPaint, this);
 }
