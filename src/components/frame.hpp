@@ -13,6 +13,8 @@ class Frame : public wxFrame {
  public:
   explicit Frame(const wxString& title, int min_width = k_min_width,
                  int min_height = k_min_height);
+  Frame(const Frame&) = delete;
+  Frame& operator=(const Frame&) = delete;
 
   void OnQuit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
