@@ -7,7 +7,8 @@ class Frame : public wxFrame {
  private:
   static constexpr int k_min_width = 400;
   static constexpr int k_min_height = 300;
-  wxScrolledWindow* surah_list_;
+  wxScrolledWindow* surah_list_ = nullptr;
+  wxPanel* reader_ = nullptr;
 
  public:
   explicit Frame(const wxString& title, int min_width = k_min_width,
@@ -15,6 +16,7 @@ class Frame : public wxFrame {
 
   void OnQuit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
+  void OnSurahSelected(wxCommandEvent& event);
 };
 
 #endif  // N_FRAME_H_

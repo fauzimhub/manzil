@@ -1,5 +1,6 @@
 #include "frame.hpp"
 #include <iostream>
+#include "../events.hpp"
 #include "about_dialog.hpp"
 #include "quranite.hpp"
 #include "surah_card.hpp"
@@ -26,7 +27,9 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   constexpr int grid_vgap = 4;
   constexpr int grid_cols = 1;
   constexpr int grid_padding = 10;
+
   surah_list_ = new wxScrolledWindow(this);
+  reader_ = new wxPanel(this);
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
   string surah_path = "assets/surah.json";
@@ -52,8 +55,17 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   surah_list_->FitInside();
   surah_list_->SetScrollRate(0, panel_ystep);
 
+  auto* sizer = new wxBoxSizer(wxVERTICAL);
+  sizer->Add(surah_list_, 1, wxEXPAND);
+  sizer->Add(reader_, 1, wxEXPAND);
+  SetSizer(sizer);
+
+  surah_list_->Show();
+  reader_->Hide();
+
   Bind(wxEVT_MENU, &Frame::OnAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &Frame::OnQuit, this, wxID_EXIT);
+  Bind(EVT_SURAH_SELECTED, &Frame::OnSurahSelected, this);
 }
 
 void Frame::OnAbout(wxCommandEvent& event) {
@@ -65,4 +77,11 @@ void Frame::OnAbout(wxCommandEvent& event) {
 void Frame::OnQuit(wxCommandEvent& event) {
   (void)event;
   Close();
+}
+
+void Frame::OnSurahSelected(wxCommandEvent& event) {
+  (void)event;
+  surah_list_->Hide();
+  reader_->Show();
+  Layout();
 }
