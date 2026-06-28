@@ -20,6 +20,8 @@ SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
   SetCursor(wxCursor(wxCURSOR_HAND));
 
   Bind(wxEVT_PAINT, &SurahCard::OnPaint, this);
+  Bind(wxEVT_ENTER_WINDOW, &SurahCard::OnEnter, this);
+  Bind(wxEVT_LEAVE_WINDOW, &SurahCard::OnLeave, this);
 }
 
 void SurahCard::OnPaint(wxPaintEvent& event) {
@@ -41,7 +43,8 @@ void SurahCard::OnPaint(wxPaintEvent& event) {
   constexpr double rect_radius = 10;
 
   device_contexts.SetPen(wxPen(white, pen_width));
-  device_contexts.SetBrush(wxBrush(white));
+  wxColour brush_colour = hovered_ ? wxColour(gray) : wxColour(white);
+  device_contexts.SetBrush(wxBrush(brush_colour));
   device_contexts.SetTextForeground(black);
 
   device_contexts.DrawRoundedRectangle(rect_x, rect_y, surahcard_w, surahcard_h,
@@ -102,4 +105,16 @@ void SurahCard::UpdateMinSize() {
   total_height += padding_;
 
   SetMinSize(wxSize(wxDefaultCoord, total_height));
+}
+
+void SurahCard::OnEnter(wxMouseEvent& event) {
+  (void)event;
+  hovered_ = true;
+  Refresh();
+}
+
+void SurahCard::OnLeave(wxMouseEvent& event) {
+  (void)event;
+  hovered_ = false;
+  Refresh();
 }

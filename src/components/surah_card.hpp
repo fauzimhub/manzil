@@ -11,6 +11,8 @@ class SurahCard : public wxPanel {
   SurahCard(wxWindow* parent, wxString number, wxString arabic,
             wxString transliteration, wxString translation, wxString verses);
   void OnPaint(wxPaintEvent& event);
+  void OnEnter(wxMouseEvent& event);
+  void OnLeave(wxMouseEvent& event);
 
  private:
   void UpdateMinSize();
@@ -19,6 +21,7 @@ class SurahCard : public wxPanel {
   static constexpr int translation_fontsize_ = 10;
   static constexpr int verses_fontsize_ = 8;
   static constexpr wxCoord padding_ = 8;
+  bool hovered_ = false;
   wxString number_;
   wxString arabic_;
   wxString transliteration_;
