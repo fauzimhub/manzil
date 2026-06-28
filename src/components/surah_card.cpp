@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 
 #include <unordered_map>
+#include "../events.hpp"
 #include "surah_card.hpp"
 
 using font_map = std::unordered_map<wxString, wxFont>;
@@ -22,6 +23,7 @@ SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
   Bind(wxEVT_PAINT, &SurahCard::OnPaint, this);
   Bind(wxEVT_ENTER_WINDOW, &SurahCard::OnEnter, this);
   Bind(wxEVT_LEAVE_WINDOW, &SurahCard::OnLeave, this);
+  Bind(wxEVT_LEFT_UP, &SurahCard::OnLeftUp, this);
 }
 
 void SurahCard::OnPaint(wxPaintEvent& event) {
@@ -117,4 +119,10 @@ void SurahCard::OnLeave(wxMouseEvent& event) {
   (void)event;
   hovered_ = false;
   Refresh();
+}
+
+void SurahCard::OnLeftUp(wxMouseEvent& event) {
+  wxCommandEvent evt(EVT_SURAH_SELECTED);
+  evt.SetEventObject(this);
+  wxPostEvent(GetParent(), evt);
 }

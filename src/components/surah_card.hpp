@@ -13,6 +13,7 @@ class SurahCard : public wxPanel {
   void OnPaint(wxPaintEvent& event);
   void OnEnter(wxMouseEvent& event);
   void OnLeave(wxMouseEvent& event);
+  void OnLeftUp(wxMouseEvent& event);
 
  private:
   void UpdateMinSize();
