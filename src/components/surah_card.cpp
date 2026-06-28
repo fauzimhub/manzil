@@ -121,7 +121,8 @@ void SurahCard::OnLeave(wxMouseEvent& event) {
 }
 
 void SurahCard::OnLeftUp(wxMouseEvent& event) {
+  (void)event;
   wxCommandEvent evt(EVT_SURAH_SELECTED);
   evt.SetEventObject(this);
-  wxPostEvent(GetParent(), evt);
+  wxPostEvent(wxGetTopLevelParent(this), evt);
 }
