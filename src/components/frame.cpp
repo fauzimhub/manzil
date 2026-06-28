@@ -30,9 +30,9 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
   string surah_path = "assets/surah.json";
-  auto* quranite = new manzil::Quranite(surah_path);
+  manzil::Quranite quranite(surah_path);
 
-  for (const auto& sur : quranite->getSurah()) {
+  for (const auto& sur : quranite.getSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
                                sur.name_transliteration, sur.name_translation,
