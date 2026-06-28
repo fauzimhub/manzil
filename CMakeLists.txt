@@ -24,7 +24,8 @@ add_executable(
   src/components/quranite.cpp
   src/components/frame.cpp
   src/components/about_dialog.cpp
-  src/components/surah_card.cpp)
+  src/components/surah_card.cpp
+  src/events.cpp)
 
 target_include_directories(
   ${EXECUTABLE_NAME}
