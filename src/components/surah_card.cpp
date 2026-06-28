@@ -5,17 +5,16 @@
 #include "surah_card.hpp"
 
 using font_map = std::unordered_map<wxString, wxFont>;
-using std::move;
 
 SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
                      wxString transliteration, wxString translation,
                      wxString verses)
     : wxPanel(parent, wxID_ANY),
-      number_(move(number)),
-      arabic_(move(arabic)),
-      transliteration_(move(transliteration)),
-      translation_(move(translation)),
-      verses_(move(verses)) {
+      number_(std::move(number)),
+      arabic_(std::move(arabic)),
+      transliteration_(std::move(transliteration)),
+      translation_(std::move(translation)),
+      verses_(std::move(verses)) {
 
   UpdateMinSize();
   SetCursor(wxCursor(wxCURSOR_HAND));
