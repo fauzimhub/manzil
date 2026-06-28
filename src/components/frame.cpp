@@ -26,14 +26,14 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   constexpr int grid_vgap = 4;
   constexpr int grid_cols = 1;
   constexpr int grid_padding = 10;
-  auto* panel = new wxScrolledWindow(this);
+  surah_list_ = new wxScrolledWindow(this);
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
   string surah_path = "assets/surah.json";
   auto* quranite = new manzil::Quranite(surah_path);
 
   for (const auto& sur : quranite->getSurah()) {
-    auto* card = new SurahCard(panel, wxString::Format("%d", sur.number),
+    auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
                                sur.name_transliteration, sur.name_translation,
                                wxString::Format("%d", sur.verses_count));
@@ -48,9 +48,9 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   }
 
   constexpr int panel_ystep = 10;
-  panel->SetSizer(grid);
-  panel->FitInside();
-  panel->SetScrollRate(0, panel_ystep);
+  surah_list_->SetSizer(grid);
+  surah_list_->FitInside();
+  surah_list_->SetScrollRate(0, panel_ystep);
 
   Bind(wxEVT_MENU, &Frame::OnAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &Frame::OnQuit, this, wxID_EXIT);
