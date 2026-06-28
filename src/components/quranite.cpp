@@ -43,11 +43,11 @@ manzil::Quranite::Quranite(string& surah_path) {
   for (uint i = 0; i < surah_count; i++) {
     surah foo{};
     foo.number = parsed_surah[i]["number"].get<int>();
-    foo.name_arabic = parsed_surah[i]["name_arabic"].get<string>();
-    foo.name_translation = parsed_surah[i]["name_translation"].get<string>();
+    foo.name_arabic = parsed_surah[i]["name"]["arabic"].get<string>();
+    foo.name_translation = parsed_surah[i]["name"]["english"].get<string>();
     foo.name_transliteration =
-        parsed_surah[i]["name_transliteration"].get<string>();
-    foo.verses_count = parsed_surah[i]["verses_count"].get<int>();
+        parsed_surah[i]["name"]["transliteration"].get<string>();
+    foo.verses_count = parsed_surah[i]["versesCount"].get<int>();
     surah_[i] = foo;
   }
 }

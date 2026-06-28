@@ -32,7 +32,7 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   reader_ = new wxPanel(this);
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
-  string surah_path = "assets/surah.json";
+  string surah_path = "assets/chapters-data.json";
   manzil::Quranite quranite(surah_path);
 
   for (const auto& sur : quranite.getSurah()) {
