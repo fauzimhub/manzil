@@ -99,18 +99,19 @@ Quranite::Quranite(const string& surah_path, const string& verses_ar,
     exit(1);
   }
 
-  uint surah_num = 1;
+  uint surah_index = 0;
   manzil::verse_v foo_v{};
   for (uint i = 0; i < manzil::k_ayah_count; i++) {
     manzil::verse foo{};
     auto current_num = parsed_ar[i][0].get<uint>();
-    if (current_num != surah_num) {
-      verse_[surah_num] = foo_v;
-      surah_num += 1;
+    if (current_num - 1 != surah_index) {
+      verse_[surah_index] = foo_v;
+      surah_index += 1;
       foo_v.clear();
     }
     foo.arabic = parsed_ar[i][2].get<string>();
     foo.english = parsed_en[i][2].get<string>();
     foo_v.emplace_back(foo);
   }
+  verse_[surah_index] = foo_v;
 }
