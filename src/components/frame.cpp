@@ -81,7 +81,9 @@ void Frame::OnQuit(wxCommandEvent& event) {
 }
 
 void Frame::OnSurahSelected(wxCommandEvent& event) {
-  (void)event;
+  // (void)event;
+  surah_number_ = static_cast<uint>(event.GetInt());
+
   surah_list_->Hide();
   reader_->Show();
   Layout();
