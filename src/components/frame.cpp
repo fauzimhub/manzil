@@ -43,12 +43,6 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
                                sur.name_transliteration, sur.name_translation,
                                wxString::Format("%d", sur.verses_count));
 
-    cout << "Surah (Number: " << sur.number
-         << ", Name Arabic: " << sur.name_arabic
-         << ", Name Translation: " << sur.name_translation
-         << ", Name Transliteration: " << sur.name_transliteration
-         << ", Verses Count: " << sur.verses_count << ")" << "\n";
-
     grid->Add(card, 0, wxEXPAND | wxALL, grid_padding);
   }
 
