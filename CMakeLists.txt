@@ -13,6 +13,8 @@ set(wxBUILD_TESTS OFF)
 set(wxBUILD_SAMPLES OFF)
 set(wxBUILD_DEMOS OFF)
 set(JSON_BuildTests OFF)
+set(wxUSE_WEBVIEW ON)
+set(wxUSE_WEBVIEW_WEBKIT ON)
 
 add_subdirectory(third_party/wxwidgets)
 add_subdirectory(third_party/json)
@@ -25,6 +27,7 @@ add_executable(
   src/components/frame.cpp
   src/components/about_dialog.cpp
   src/components/surah_card.cpp
+  src/components/reader.cpp
   src/events.cpp)
 
 target_include_directories(
@@ -34,7 +37,7 @@ target_include_directories(
 
 target_link_libraries(
   ${EXECUTABLE_NAME}
-  PRIVATE wx::core wx::base nlohmann_json::nlohmann_json)
+  PRIVATE wx::core wx::base wx::webview nlohmann_json::nlohmann_json)
 
 target_compile_definitions(
   ${EXECUTABLE_NAME}

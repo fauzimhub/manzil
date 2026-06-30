@@ -3,6 +3,7 @@
 #include "../events.hpp"
 #include "about_dialog.hpp"
 #include "quranite.hpp"
+#include "reader.hpp"
 #include "surah_card.hpp"
 
 using std::cout;
@@ -33,7 +34,7 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   constexpr int grid_padding = 10;
 
   surah_list_ = new wxScrolledWindow(this);
-  reader_ = new wxPanel(this);
+  reader_ = new Reader(this, quranite_, surah_number_);
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
   for (const auto& sur : quranite_.getSurah()) {
@@ -84,6 +85,7 @@ void Frame::OnSurahSelected(wxCommandEvent& event) {
   // (void)event;
   surah_number_ = static_cast<uint>(event.GetInt());
 
+  reader_->LoadSurah(surah_number_);
   surah_list_->Hide();
   reader_->Show();
   Layout();
