@@ -20,6 +20,8 @@ struct verse {
 };
 
 constexpr int k_surah_count = 114;
+constexpr int k_ayah_count = 6236;
+
 using verse_v = std::vector<verse>;
 using surah_list = std::array<surah, k_surah_count>;
 using verse_list = std::array<verse_v, k_surah_count>;
