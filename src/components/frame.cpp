@@ -8,7 +8,11 @@
 using std::cout;
 
 Frame::Frame(const wxString& title, int min_width, int min_height)
-    : wxFrame(nullptr, wxID_ANY, title) {
+    : wxFrame(nullptr, wxID_ANY, title),
+      quranite_("assets/chapters-data.json", "assets/verses_ar_original.json",
+                "assets/verses_en_sam-gerrans_with-notes.json")
+
+{
 
   SetMinSize(wxSize(min_width, min_height));
 
@@ -39,6 +43,7 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   Quranite quranite(surah_path, verses_ar, verses_en);
 
   for (const auto& sur : quranite.getSurah()) {
+  for (const auto& sur : quranite_.getSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
                                sur.name_transliteration, sur.name_translation,

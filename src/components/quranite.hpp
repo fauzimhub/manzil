@@ -12,7 +12,8 @@ class Quranite {
   manzil::verse_list verse_{};
 
  public:
-  explicit Quranite(string& surah_path, string& verses_ar, string& verses_an);
+  explicit Quranite(const string& surah_path, const string& verses_ar,
+                    const string& verses_an);
 
   [[nodiscard]] const manzil::surah_list& getSurah() const { return surah_; }
 

@@ -9,6 +9,7 @@ class Frame : public wxFrame {
   static constexpr int k_min_height = 300;
   wxScrolledWindow* surah_list_ = nullptr;
   wxPanel* reader_ = nullptr;
+  Quranite quranite_;
 
  public:
   explicit Frame(const wxString& title, int min_width = k_min_width,

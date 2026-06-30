@@ -12,7 +12,8 @@ using ifstream = std::ifstream;
 using exception = std::exception;
 using std::cerr;
 
-Quranite::Quranite(string& surah_path, string& verses_ar, string& verses_en) {
+Quranite::Quranite(const string& surah_path, const string& verses_ar,
+                   const string& verses_en) {
   json parsed_surah{};
   ifstream file{surah_path};
   if (file.is_open()) {
