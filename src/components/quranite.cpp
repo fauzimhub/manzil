@@ -13,7 +13,7 @@ using exception = std::exception;
 using std::cerr;
 
 Quranite::Quranite(const string& surah_path, const string& verses_ar,
-                   const string& verses_en) {
+                   const string& verses_en, const string& notes_path) {
   json parsed_surah{};
   ifstream file{surah_path};
   if (file.is_open()) {
@@ -114,4 +114,34 @@ Quranite::Quranite(const string& surah_path, const string& verses_ar,
     foo_v.emplace_back(foo);
   }
   verse_[surah_index] = foo_v;
+
+  json parsed_notes{};
+  ifstream file_notes{notes_path};
+  if (file_notes.is_open()) {
+    try {
+      parsed_notes = json::parse(file_notes);
+    } catch (exception& e) {
+      cerr << "<< Manzil: encountered an error while trying to parse \""
+           << notes_path << "\" as json:\n"
+           << e.what() << "\n";
+      exit(1);
+    }
+  } else {
+    cerr << "<< Manzil: could not open \"" << notes_path << "\"\n";
+    exit(1);
+  }
+
+  for (uint i = 0; i < manzil::k_surah_count; i++) {
+    note_[i].resize(static_cast<uint>(surah_[i].verses_count));
+  }
+
+  for (const auto& entry : parsed_notes) {
+    string key = entry[0].get<string>();
+    string text = entry[1].get<string>();
+
+    uint surah_n = 0, ayah_n = 0, note_n = 0;
+    std::sscanf(key.c_str(), "%u:%u:%u", &surah_n, &ayah_n, &note_n);
+
+    note_[surah_n - 1][ayah_n - 1].emplace_back(text);
+  }
 }

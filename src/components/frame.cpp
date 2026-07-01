@@ -11,7 +11,8 @@ using std::cout;
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
       quranite_("assets/chapters-data.json", "assets/verses_ar_original.json",
-                "assets/verses_en_sam-gerrans_with-notes.json")
+                "assets/verses_en_sam-gerrans_with-notes.json",
+                "assets/notes_en_sam-gerrans.json")
 
 {
 
