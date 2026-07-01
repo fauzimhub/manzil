@@ -28,6 +28,7 @@ add_executable(
   src/components/about_dialog.cpp
   src/components/surah_card.cpp
   src/components/reader.cpp
+  src/components/reader_dialog.cpp
   src/events.cpp)
 
 target_include_directories(
