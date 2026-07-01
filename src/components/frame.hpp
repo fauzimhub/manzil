@@ -2,6 +2,7 @@
 #define N_FRAME_H_
 
 #include <wx/wx.h>
+#include "../events.hpp"
 #include "reader.hpp"
 
 class Frame : public wxFrame {
@@ -22,6 +23,7 @@ class Frame : public wxFrame {
   void OnQuit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnSurahSelected(wxCommandEvent& event);
+  void OnNoteClicked(NoteClickedEvent& event);
 };
 
 #endif  // N_FRAME_H_

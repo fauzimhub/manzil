@@ -1,5 +1,6 @@
 #include "reader.hpp"
 #include <nlohmann/json.hpp>
+#include "../events.hpp"
 #include "../types.hpp"
 #include "quranite.hpp"
 
@@ -67,8 +68,9 @@ void Reader::OnNoteClicked(wxWebViewEvent& event) {
         std::stoul(parsed_payload["note"].get<std::string>()));
     uint surah = surah_number_;
 
-    std::cout << "Surah: " << surah << ", Ayah: " << ayah << ", Note: " << note
-              << "\n";
+    NoteClickedEvent note_event(EVT_NOTE_CLICKED, GetId(), surah, ayah, note);
+    wxPostEvent(GetParent(), note_event);
+
   } catch (const std::exception& e) {
     std::cerr << "<< Manzil : Failed to parse note clicked payload, "
               << e.what() << "\n";
