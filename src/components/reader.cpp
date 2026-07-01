@@ -33,6 +33,7 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
       ".ar { direction:rtl; text-align:right; font-size:24px; width:50%; }"
       ".en { direction:ltr; text-align:left; font-size:16px; width:50%; }"
       "sup { color:#4ea1ff; cursor:pointer; }"
+      "a { color:#4ea1ff; cursor:pointer; }"
       "</style></head><body><table>";
 
   manzil::verse_list verse = quranite.getVerse();
@@ -109,6 +110,15 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
       ""
       "    row.insertAdjacentHTML('afterend', notesHtml);"
       "  });"
+      "});"
+      "document.addEventListener('click', e => {"
+      "  const a = e.target.closest('a');"
+      "  if (a && a.closest('.note-row')) {"
+      "    e.preventDefault();"
+      "    window.manzil.postMessage(JSON.stringify({"
+      "      ref: a.textContent.trim()"
+      "    }));"
+      "  }"
       "});"
       "</script></body></html>";
 
