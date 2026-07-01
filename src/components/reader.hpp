@@ -11,10 +11,13 @@ class Reader : public wxPanel {
   void LoadSurah(uint surah_number);
   void OnNoteClicked(wxWebViewEvent& event);
 
+  Reader(const Reader&) = delete;
+  Reader& operator=(const Reader&) = delete;
+
  private:
-  wxWebView* webview_;
+  wxWebView* webview_ = nullptr;
   Quranite& quranite_;
   uint surah_number_;
-  wxString BuildHtml(Quranite& quranite, uint surah_number);
+  static wxString BuildHtml(const Quranite& quranite, uint surah_number);
 };
 #endif  // N_READER_H_

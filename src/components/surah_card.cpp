@@ -123,6 +123,6 @@ void SurahCard::OnLeave(wxMouseEvent& event) {
 void SurahCard::OnLeftUp(wxMouseEvent& event) {
   (void)event;
   wxCommandEvent evt(EVT_SURAH_SELECTED);
-  evt.SetInt(static_cast<int>(wxAtoi(number_)));
+  evt.SetInt((wxAtoi(number_)));
   wxPostEvent(wxGetTopLevelParent(this), evt);
 }

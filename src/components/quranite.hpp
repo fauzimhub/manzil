@@ -13,7 +13,7 @@ class Quranite {
 
  public:
   explicit Quranite(const string& surah_path, const string& verses_ar,
-                    const string& verses_an);
+                    const string& verses_en);
 
   [[nodiscard]] const manzil::surah_list& getSurah() const { return surah_; }
 

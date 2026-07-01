@@ -22,7 +22,7 @@ Reader::Reader(wxWindow* parent, Quranite& quranite, uint surah_number)
   SetSizer(sizer);
 }
 
-wxString Reader::BuildHtml(Quranite& quranite, uint surah_number) {
+wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
   wxString html =
       "<html><head><style>"
       "body { background:#282c34; color:#ffffff; "
@@ -61,8 +61,10 @@ wxString Reader::BuildHtml(Quranite& quranite, uint surah_number) {
 void Reader::OnNoteClicked(wxWebViewEvent& event) {
   try {
     auto parsed_payload = json::parse(event.GetString().ToStdString());
-    uint ayah = wxAtoi(parsed_payload["ayah"].get<std::string>());
-    uint note = wxAtoi(parsed_payload["note"].get<std::string>());
+    uint ayah = static_cast<uint>(
+        std::stoul(parsed_payload["ayah"].get<std::string>()));
+    uint note = static_cast<uint>(
+        std::stoul(parsed_payload["note"].get<std::string>()));
     uint surah = surah_number_;
 
     std::cout << "Surah: " << surah << ", Ayah: " << ayah << ", Note: " << note
