@@ -4,6 +4,7 @@
 #include <wx/webview.h>
 #include <wx/wx.h>
 #include "quranite.hpp"
+#include "reader_dialog.hpp"
 
 class Reader : public wxPanel {
  public:
@@ -16,6 +17,7 @@ class Reader : public wxPanel {
 
  private:
   wxWebView* webview_ = nullptr;
+  ReaderDialog* dialog_ = nullptr;
   Quranite& quranite_;
   uint surah_number_;
   static wxString BuildHtml(const Quranite& quranite, uint surah_number);

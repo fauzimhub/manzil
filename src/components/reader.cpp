@@ -128,6 +128,32 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
 void Reader::OnNoteClicked(wxWebViewEvent& event) {
   try {
     auto parsed_payload = json::parse(event.GetString().ToStdString());
+
+    if (parsed_payload.contains("ref")) {
+      std::string ref = parsed_payload["ref"].get<std::string>();
+      uint surah = 0, begin_ayah = 0, end_ayah = 0;
+      if (std::sscanf(ref.c_str(), "%u:%u-%u", &surah, &begin_ayah,
+                      &end_ayah) != 3) {
+        if (std::sscanf(ref.c_str(), "%u:%u", &surah, &begin_ayah) == 2)
+          end_ayah = begin_ayah;
+        else
+          return;
+      }
+      if (!dialog_) {
+        dialog_ =
+            new ReaderDialog(this, quranite_, surah, begin_ayah, end_ayah);
+        dialog_->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent& event) {
+          dialog_ = nullptr;
+          event.Skip();  // let the dialog actually close
+        });
+        dialog_->Show();
+      } else {
+        dialog_->Navigate(surah, begin_ayah, end_ayah);
+        dialog_->Raise();
+      }
+      return;
+    }
+
     uint ayah = static_cast<uint>(
         std::stoul(parsed_payload["ayah"].get<std::string>()));
     uint note = static_cast<uint>(
