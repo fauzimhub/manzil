@@ -24,6 +24,7 @@ class Frame : public wxFrame {
   void OnAbout(wxCommandEvent& event);
   void OnSurahSelected(wxCommandEvent& event);
   void OnNoteClicked(NoteClickedEvent& event);
+  void OnKeyDown(wxKeyEvent& event);
 };
 
 #endif  // N_FRAME_H_
