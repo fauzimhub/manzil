@@ -28,7 +28,7 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
       "<html><head><style>"
       "body { background:#282c34; color:#ffffff; "
       "font-family: 'Noto Naskh Arabic'; }"
-      "table { width:100%;}"
+      "table { width:100%; max-width:900px; margin:0 auto; }"
       "td { vertical-align:top; padding:10px;}"
       ".ar { direction:rtl; text-align:right; font-size:24px; width:50%; }"
       ".en { direction:ltr; text-align:left; font-size:16px; width:50%; }"
@@ -36,26 +36,82 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
       "</style></head><body><table>";
 
   manzil::verse_list verse = quranite.getVerse();
+  manzil::note_list notes = quranite.getNote();
+
   uint ayah = 1;
   for (const auto& ver : verse[surah_number - 1]) {
+    wxString notes_json = "[";
+    for (size_t i = 0; i < notes[surah_number - 1][ayah - 1].size(); i++) {
+      if (i > 0)
+        notes_json += ",";
+
+      wxString note_str =
+          wxString::FromUTF8(notes[surah_number - 1][ayah - 1][i]);
+
+      unsigned long a, b, c;
+      if (std::sscanf(note_str, "%lu:%lu:%lu", &a, &b, &c) == 3) {
+        if (a > 0 && a <= notes.size() && b > 0 && b <= notes[a - 1].size() &&
+            c > 0 && c <= notes[a - 1][b - 1].size()) {
+          note_str = wxString::FromUTF8(notes[a - 1][b - 1][c - 1]);
+        }
+      }
+
+      notes_json += "\"" + note_str + "\"";
+    }
+    notes_json += "]";
+
     html += wxString::Format(
-        "<tr data-ayah=\"%u\">"
+        "<tr data-ayah=\"%u\" data-notes='%s'>"
         "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
-        ayah, wxString::FromUTF8(ver.arabic), wxString::FromUTF8(ver.english));
+        ayah, notes_json, wxString::FromUTF8(ver.arabic),
+        wxString::FromUTF8(ver.english));
     ayah++;
   }
 
   html +=
-      "</table><script>"
-      "document.querySelectorAll('sup').forEach((e) => {"
+      "</table>"
+      "<script>"
+      "document.querySelectorAll('sup').forEach(e => {"
       "  e.addEventListener('click', () => {"
-      "    var ayah = e.closest('tr').dataset.ayah;"
+      "    const row = e.closest('tr');"
+      "    const ayah = row.dataset.ayah;"
+      "    const noteIndex = parseInt(e.textContent) - 1;"
+      "    const key = ayah + '_' + noteIndex;"
+      ""
+      "    const openNotes = JSON.parse(row.dataset.openNotes || '{}');"
+      "    const isOpen = openNotes[key] !== undefined;"
+      ""
+      "    if (isOpen) {"
+      "      delete openNotes[key];"
+      "    } else {"
+      "      const notes = JSON.parse(row.dataset.notes);"
+      "      openNotes[key] = { index: noteIndex, ayah: ayah, text: "
+      "notes[noteIndex] };"
+      "    }"
+      "    row.dataset.openNotes = JSON.stringify(openNotes);"
+      ""
       "    window.manzil.postMessage(JSON.stringify({"
-      "      ayah: ayah, note: e.textContent"
+      "      ayah: ayah,"
+      "      note: e.textContent,"
+      "      action: isOpen ? 'close' : 'open'"
       "    }));"
+      ""
+      "    while (row.nextElementSibling?.classList.contains('note-row')) {"
+      "      row.nextElementSibling.remove();"
+      "    }"
+      ""
+      "    const notesHtml = Object.values(openNotes)"
+      "      .sort((a, b) => a.index - b.index)"
+      "      .map(n => '<tr class=\"note-row\"><td colspan=\"2\" "
+      "style=\"color:#aaa; font-size:13px; padding:6px 10px; border-bottom:1px "
+      "solid #444;\">' + n.text + '</td></tr>')"
+      "      .join('');"
+      ""
+      "    row.insertAdjacentHTML('afterend', notesHtml);"
       "  });"
       "});"
       "</script></body></html>";
+
   return html;
 }
 
