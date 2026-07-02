@@ -41,25 +41,31 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
 
   uint ayah = 1;
   for (const auto& ver : verse[surah_number - 1]) {
-    wxString notes_json = "[";
-    for (size_t i = 0; i < notes[surah_number - 1][ayah - 1].size(); i++) {
-      if (i > 0)
-        notes_json += ",";
+    json notes_array = json::array();
 
-      wxString note_str =
-          wxString::FromUTF8(notes[surah_number - 1][ayah - 1][i]);
+    for (size_t i = 0; i < notes[surah_number - 1][ayah - 1].size(); i++) {
+      // 1. Keep it as std::string to avoid wxString encoding issues during JSON building
+      std::string note_str = notes[surah_number - 1][ayah - 1][i];
 
       unsigned long a, b, c;
-      if (std::sscanf(note_str, "%lu:%lu:%lu", &a, &b, &c) == 3) {
+      if (std::sscanf(note_str.c_str(), "%lu:%lu:%lu", &a, &b, &c) == 3) {
         if (a > 0 && a <= notes.size() && b > 0 && b <= notes[a - 1].size() &&
             c > 0 && c <= notes[a - 1][b - 1].size()) {
-          note_str = wxString::FromUTF8(notes[a - 1][b - 1][c - 1]);
+          note_str = notes[a - 1][b - 1][c - 1];
         }
       }
 
-      notes_json += "\"" + note_str + "\"";
+      // 2. Push the raw string. nlohmann::json automatically escapes \n, ", \, etc.
+      notes_array.push_back(note_str);
     }
-    notes_json += "]";
+
+    // 3. dump() creates perfectly valid JSON. Convert to wxString safely.
+    // (By default, dump() also escapes non-ASCII characters to \uXXXX,
+    // ensuring wxString::FromUTF8 never fails even in ANSI builds).
+    wxString notes_json = wxString::FromUTF8(notes_array.dump());
+
+    // Optional but recommended: Escape single quotes so they don't break your HTML attribute
+    notes_json.Replace("'", "&#39;");
 
     html += wxString::Format(
         "<tr data-ayah=\"%u\" data-notes='%s'>"
