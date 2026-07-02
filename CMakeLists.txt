@@ -47,11 +47,10 @@ target_compile_definitions(
 target_compile_options(
   ${EXECUTABLE_NAME}
   PRIVATE
-    -g
-    -pedantic
-    -Wall
-    -Weffc++
-    -Wextra
-    -Wconversion
-    -Wsign-conversion
-    -Wno-enum-enum-conversion)
+    $<$<CONFIG:Debug>:-g -std=c++17 -pedantic -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wno-enum-enum-conversion>
+    $<$<CONFIG:Release>:-Os -std=c++17 -s -flto=auto -fno-ident -DNDEBUG>)
+
+target_compile_definitions(
+  ${EXECUTABLE_NAME}
+  PRIVATE $<$<CONFIG:Debug>:DEBUG_MODE=1> $<$<CONFIG:Release>:RELEASE_MODE=1>)
+
