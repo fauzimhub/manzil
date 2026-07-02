@@ -2,8 +2,11 @@
 #define N_FRAME_H_
 
 #include <wx/wx.h>
+#include <filesystem>
 #include "../events.hpp"
 #include "reader.hpp"
+
+using path = std::filesystem::path;
 
 class Frame : public wxFrame {
  private:
@@ -25,6 +28,7 @@ class Frame : public wxFrame {
   void OnSurahSelected(wxCommandEvent& event);
   void OnNoteClicked(NoteClickedEvent& event);
   void OnKeyDown(wxKeyEvent& event);
+  path GetExecutableDir();
 };
 
 #endif  // N_FRAME_H_

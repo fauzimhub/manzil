@@ -10,9 +10,15 @@ using std::cout;
 
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
-      quranite_("assets/chapters-data.json", "assets/verses_ar_original.json",
-                "assets/verses_en_sam-gerrans_with-notes.json",
-                "assets/notes_en_sam-gerrans.json")
+      quranite_([&] {
+        path exe_dir = GetExecutableDir();
+        return Quranite(
+            (exe_dir / "assets" / "chapters-data.json").string(),
+            (exe_dir / "assets" / "verses_ar_original.json").string(),
+            (exe_dir / "assets" / "verses_en_sam-gerrans_with-notes.json")
+                .string(),
+            (exe_dir / "assets" / "notes_en_sam-gerrans.json").string());
+      }())
 
 {
 
@@ -105,4 +111,17 @@ void Frame::OnKeyDown(wxKeyEvent& event) {
   } else {
     event.Skip();
   }
+}
+
+path Frame::GetExecutableDir() {
+  char result[PATH_MAX];
+
+  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+
+  if (count != -1) {
+    path exe_path(std::string(result, count));
+    return exe_path.parent_path();
+  }
+
+  return ".";
 }
