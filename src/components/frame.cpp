@@ -69,7 +69,6 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   Bind(wxEVT_MENU, &Frame::OnAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &Frame::OnQuit, this, wxID_EXIT);
   Bind(EVT_SURAH_SELECTED, &Frame::OnSurahSelected, this);
-  Bind(EVT_NOTE_CLICKED, &Frame::OnNoteClicked, this);
   Bind(wxEVT_CHAR_HOOK, &Frame::OnKeyDown, this);
 }
 
@@ -93,14 +92,6 @@ void Frame::OnSurahSelected(wxCommandEvent& event) {
   reader_->Show();
   Layout();
   reader_->SetFocus();
-}
-
-void Frame::OnNoteClicked(NoteClickedEvent& event) {
-  uint surah = event.GetSurah();
-  uint ayah = event.GetAyah();
-  uint note = event.GetNote();
-  std::cout << "Note clicked - Surah: " << surah << ", Ayah: " << ayah
-            << ", Note: " << note << "\n";
 }
 
 void Frame::OnKeyDown(wxKeyEvent& event) {

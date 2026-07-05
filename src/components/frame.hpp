@@ -3,7 +3,6 @@
 
 #include <wx/wx.h>
 #include <filesystem>
-#include "../events.hpp"
 #include "reader.hpp"
 
 using path = std::filesystem::path;
@@ -26,7 +25,6 @@ class Frame : public wxFrame {
   void OnQuit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnSurahSelected(wxCommandEvent& event);
-  void OnNoteClicked(NoteClickedEvent& event);
   void OnKeyDown(wxKeyEvent& event);
   path GetExecutableDir();
 };
