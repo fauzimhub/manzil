@@ -1,5 +1,4 @@
-/* frame.hpp: main top-level window holding loaded Quran data (Quranite), handling menu actions (quit, about), and toggle between surah list and reader panel.
-
+/*
 Copyright (c) 2026 Maher Fauzi 
    Permission is hereby granted, free of charge, to any person obtaining a copy of
    this software and associated documentation files (the "Software"), to deal in
@@ -16,7 +15,6 @@ Copyright (c) 2026 Maher Fauzi
    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
-
 */
 
 #ifndef FRAME_HPP
@@ -25,23 +23,63 @@ Copyright (c) 2026 Maher Fauzi
 #include <wx/wx.h>
 #include "reader.hpp"
 
+/**
+  * @brief main application window holding loaded Quran data (Quranite), handling menu actions, and toggle between surah list and reader panel.
+ */
 class Frame : public wxFrame {
  private:
   static constexpr int k_min_width = 400;
   static constexpr int k_min_height = 300;
 
-  uint surah_number_ = 1;
+  uint surah_number_ = 1;  ///< Currently displayed surah number (1-114).
   Quranite quranite_;
 
-  Reader* reader_ = nullptr;
-  wxScrolledWindow* surah_list_ = nullptr;
+  Reader* reader_ =
+      nullptr;  ///< Active reader panel; null until a surah is opened.
+  wxScrolledWindow* surah_list_ =
+      nullptr;  ///< Scrollable list of SurahCard panels shown on launch.
 
+  /**
+    * @brief Handle the Quit menu action. 
+    * @param event Unused command event.
+    */
   void OnQuit(wxCommandEvent& event);
+
+  /**
+    * @brief Handle the About menu action.
+    * @param event Unused command event.
+    */
   void OnAbout(wxCommandEvent& event);
+
+  /**
+    * @brief Handle a surah being selected from the surah list.
+    *
+    * Change visible panel from surah list to reader view
+    * and load surah content.
+    *
+    * @param event Carries the ID of the selected SurahCard.
+    */
   void OnSurahSelected(wxCommandEvent& event);
+
+  /**
+    * @brief Handle Escape to return from the reader view to the surah list.
+    *
+    * Bound to wxEVT_CHAR_HOOK rather than wxEVT_KEY_DOWN so Escape is
+    * caught even when focus is inside the reader's wxWebView, which
+    * would otherwise consume the key first. All other keys are skipped
+    * and allowed to propagate normally.
+    *
+    * @param event The key press event.
+ */
   void OnKeyDown(wxKeyEvent& event);
 
  public:
+  /**
+   * @brief Construct the main application window.
+   * @param title Window title text.
+   * @param min_width Minimum window width in pixels.
+   * @param min_height Minimum window height in pixels.
+   */
   explicit Frame(const wxString& title, int min_width = k_min_width,
                  int min_height = k_min_height);
   Frame(const Frame&) = delete;

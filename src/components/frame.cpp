@@ -13,7 +13,7 @@ using std::filesystem::read_symlink;
 
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
-      quranite_([&] {
+      quranite_([]() {
         path exe_dir = manzil::App::GetExecutableDir();
         return Quranite(
             (exe_dir / "assets" / "chapters-data.json").string(),
@@ -45,7 +45,6 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   constexpr int panel_ystep = 10;
 
   surah_list_ = new wxScrolledWindow(this);
-  reader_ = new Reader(this, quranite_, surah_number_);
 
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
   for (const auto& sur : quranite_.getSurah()) {
@@ -63,11 +62,9 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
 
   auto* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(surah_list_, 1, wxEXPAND);
-  sizer->Add(reader_, 1, wxEXPAND);
   SetSizer(sizer);
 
   surah_list_->Show();
-  reader_->Hide();
 
   Bind(wxEVT_MENU, &Frame::OnAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &Frame::OnQuit, this, wxID_EXIT);
@@ -89,7 +86,12 @@ void Frame::OnQuit(wxCommandEvent& event) {
 void Frame::OnSurahSelected(wxCommandEvent& event) {
   surah_number_ = static_cast<uint>(event.GetInt());
 
-  reader_->LoadSurah(surah_number_);
+  if (reader_ == nullptr) {
+    reader_ = new Reader(this, quranite_, surah_number_);
+    GetSizer()->Add(reader_, 1, wxEXPAND);
+  } else {
+    reader_->LoadSurah(surah_number_);
+  }
 
   surah_list_->Hide();
   reader_->Show();
@@ -98,7 +100,8 @@ void Frame::OnSurahSelected(wxCommandEvent& event) {
 }
 
 void Frame::OnKeyDown(wxKeyEvent& event) {
-  if (event.GetKeyCode() == WXK_ESCAPE && reader_->IsShown()) {
+  if (event.GetKeyCode() == WXK_ESCAPE && reader_ != nullptr &&
+      reader_->IsShown()) {
     reader_->Hide();
     surah_list_->Show();
     Layout();
