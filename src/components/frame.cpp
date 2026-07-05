@@ -7,6 +7,8 @@
 #include "surah_card.hpp"
 
 using std::cout;
+using std::exception;
+using std::filesystem::read_symlink;
 
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
@@ -105,14 +107,12 @@ void Frame::OnKeyDown(wxKeyEvent& event) {
 }
 
 path Frame::GetExecutableDir() {
-  char result[PATH_MAX];
+  try {
 
-  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-
-  if (count != -1) {
-    path exe_path(std::string(result, count));
+    path exe_path = read_symlink("/proc/self/exe");
     return exe_path.parent_path();
-  }
 
-  return ".";
+  } catch (const exception& e) {
+    return ".";
+  }
 }

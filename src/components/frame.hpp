@@ -26,7 +26,7 @@ class Frame : public wxFrame {
   void OnAbout(wxCommandEvent& event);
   void OnSurahSelected(wxCommandEvent& event);
   void OnKeyDown(wxKeyEvent& event);
-  path GetExecutableDir();
+  static path GetExecutableDir();
 };
 
 #endif  // N_FRAME_H_
