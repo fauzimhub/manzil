@@ -25,7 +25,7 @@ Copyright (c) 2026 Maher Fauzi
 int main(int argc, char** argv) {
 
   /*
-   * on linux without setting disabling dmabuf renderer got : 
+   * on linux without setting disabling dmabuf renderer got: 
    * error 71(Protocol error) dispatching to Wayland
    * a.k.a black screen the exit on wxwidgets web view.
    * havent quite found the reason yet, 

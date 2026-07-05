@@ -1,4 +1,4 @@
-/* manzil.hpp: bootstrap manzil.
+/* manzil.hpp: bootstrap manzil, global util function (get executable dir etc).
 
 Copyright (c) 2026 Maher Fauzi 
    Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -23,12 +23,16 @@ Copyright (c) 2026 Maher Fauzi
 #define MANZIL_HPP
 
 #include <wx/wx.h>
+#include <filesystem>
+
+using path = std::filesystem::path;
 
 namespace manzil {
 
 class App : public wxApp {
  public:
   bool OnInit() override;
+  static path GetExecutableDir();
 };
 
 }  // namespace manzil

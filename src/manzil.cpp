@@ -5,6 +5,9 @@
 #include "manzil.hpp"
 
 using string = std::string;
+using std::cerr;
+using std::exception;
+using std::filesystem::read_symlink;
 
 bool manzil::App::OnInit() {
   string title = "Manzil";
@@ -14,4 +17,20 @@ bool manzil::App::OnInit() {
   frame->Show();
 
   return true;
+}
+
+path manzil::App::GetExecutableDir() {
+
+  string proc_self_exe = "/proc/self/exe";
+
+  try {
+
+    path exe_path = read_symlink(proc_self_exe);
+    return exe_path.parent_path();
+
+  } catch (const exception& e) {
+    std::cerr << "<< Manzil : Failed to read symlink " << proc_self_exe << "\n"
+              << e.what() << "\n";
+    return ".";
+  }
 }

@@ -1,19 +1,20 @@
 #include "frame.hpp"
 #include <iostream>
 #include "../events.hpp"
+#include "../manzil.hpp"
 #include "about_dialog.hpp"
 #include "quranite.hpp"
 #include "reader.hpp"
 #include "surah_card.hpp"
 
-using std::cout;
+using std::cerr;
 using std::exception;
 using std::filesystem::read_symlink;
 
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
       quranite_([&] {
-        path exe_dir = GetExecutableDir();
+        path exe_dir = manzil::App::GetExecutableDir();
         return Quranite(
             (exe_dir / "assets" / "chapters-data.json").string(),
             (exe_dir / "assets" / "verses_ar_original.json").string(),
@@ -41,11 +42,12 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   constexpr int grid_vgap = 4;
   constexpr int grid_cols = 1;
   constexpr int grid_padding = 10;
+  constexpr int panel_ystep = 10;
 
   surah_list_ = new wxScrolledWindow(this);
   reader_ = new Reader(this, quranite_, surah_number_);
-  auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
 
+  auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
   for (const auto& sur : quranite_.getSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
@@ -55,7 +57,6 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
     grid->Add(card, 0, wxEXPAND | wxALL, grid_padding);
   }
 
-  constexpr int panel_ystep = 10;
   surah_list_->SetSizer(grid);
   surah_list_->FitInside();
   surah_list_->SetScrollRate(0, panel_ystep);
@@ -86,10 +87,10 @@ void Frame::OnQuit(wxCommandEvent& event) {
 }
 
 void Frame::OnSurahSelected(wxCommandEvent& event) {
-  // (void)event;
   surah_number_ = static_cast<uint>(event.GetInt());
 
   reader_->LoadSurah(surah_number_);
+
   surah_list_->Hide();
   reader_->Show();
   Layout();
@@ -103,16 +104,5 @@ void Frame::OnKeyDown(wxKeyEvent& event) {
     Layout();
   } else {
     event.Skip();
-  }
-}
-
-path Frame::GetExecutableDir() {
-  try {
-
-    path exe_path = read_symlink("/proc/self/exe");
-    return exe_path.parent_path();
-
-  } catch (const exception& e) {
-    return ".";
   }
 }
