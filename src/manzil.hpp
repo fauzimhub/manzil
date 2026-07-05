@@ -1,5 +1,4 @@
-/* manzil.hpp: bootstrap manzil, global util function (get executable dir etc).
-
+/*
 Copyright (c) 2026 Maher Fauzi 
    Permission is hereby granted, free of charge, to any person obtaining a copy of
    this software and associated documentation files (the "Software"), to deal in
@@ -16,7 +15,6 @@ Copyright (c) 2026 Maher Fauzi
    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
-
 */
 
 #ifndef MANZIL_HPP
@@ -29,9 +27,34 @@ using path = std::filesystem::path;
 
 namespace manzil {
 
+/**
+ * @brief Bootstrap Manzil, global util function (get executable directory etc).
+ */
 class App : public wxApp {
  public:
   bool OnInit() override;
+
+  /**
+    * @brief Get the directory containing the running executable.
+    *
+    * Resolves the executable's location via the /proc/self/exe symlink
+    * (linux).
+    *
+    * @code
+    * // Example : locate bundled assets (JSON data files)
+    * // relative to the binary rather than the current working directory.
+    *
+    * path exe_dir = manzil::App::GetExecutableDir();
+    * path assets = exe_dir / "assets" / "chapters-data.json";
+    * @endcode
+    * 
+    * @see Frame::Frame
+    *
+    * @return Absolute path to the executable's parent directory, or "."
+    *         if the symlink could not be resolved.
+    *
+    * @note Currently Linux-only (relies on /proc/self/exe).
+   */
   static path GetExecutableDir();
 };
 
