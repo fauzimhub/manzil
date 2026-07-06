@@ -64,5 +64,55 @@ class App : public wxApp {
  *
  */
 path GetExecutableDir();
+
+/**
+ * @brief Parse a JSON file and validate  entry count.
+ *
+ * Parse JSON file and check if size of parsed JSON is correct
+ * based on expected_size param
+ *
+ * @code
+ * // Example : parsing surah JSON file 
+ * constexpr std::string surah_path = "/where/surah/is.json" 
+ * constexpr uint surah_count = 114  
+ * json parsed_surah = manzil::ParseJSON(surah_path, static_cast<int>(surah_count));
+ * @endcode
+ * 
+ * @see Quranite::Quranite
+ * @see parseJSON(const string&) for parsing without entry-count validation.
+ *
+ * @param path Path to the JSON file to parse.
+ * @param expected_size Expected number of entries.
+ * @return Parsed JSON document.
+ *
+ * @throws std::runtime_error if any data file is missing, malformed, or has an unexpected entry count.          
+ *
+ *
+ */
+json ParseJSON(const string& path, size_t expected_size);
+
+/**
+ * @brief Parse a JSON file without validate its entry count.
+ *
+ * Parse JSON file without checking if size of parsed JSON is correct
+ *
+ * @code
+ * // Example : parsing surah JSON file 
+ * constexpr std::string surah_path = "/where/surah/is.json" 
+ * json parsed_surah = manzil::ParseJSON(surah_path);
+ * @endcode
+ * 
+ * @see Quranite::Quranite
+ * @see parseJSON(const string&, int) for safer parsing that also
+ *      validates the expected entry count.
+ *
+ * @param path Path to the JSON file to parse.
+ * @return Parsed JSON document.
+ *
+ * @throws std::runtime_error if any data file is missing, malformed.         
+ *
+ */
+json ParseJSON(const string& path);
+
 }  // namespace manzil
 #endif  // MANZIL_HPP

@@ -1,10 +1,10 @@
+#include "quranite.hpp"
 #include <wx/wx.h>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-
-#include "quranite.hpp"
+#include "../manzil.hpp"
 
 using string = std::string;
 using json = nlohmann::json;
@@ -12,33 +12,36 @@ using ifstream = std::ifstream;
 using exception = std::exception;
 using std::cerr;
 
-Quranite::Quranite(const string& surah_path, const string& verses_ar,
-                   const string& verses_en, const string& notes_path) {
+// TODO: Only structural JSON validity and top-level entry counts are
+//       checked. Semantic correctness of the data itself (e.g. correct
+//       ayah counts per surah, correct surah ordering, cross-file
+//       consistency between verses_count and actual verse entries) is
+//       not validated and is assumed correct from the source files.
+Quranite::Quranite(manzil::quranite_data_paths& paths) {
+
   json parsed_surah{};
-  ifstream file{surah_path};
-  if (file.is_open()) {
-    try {
+  json parsed_ar{};
+  json parsed_en{};
+  json parsed_notes{};
 
-      parsed_surah = json::parse(file);
-
-    } catch (exception& e) {
-      cerr << "<< Manzil: encountered an error while trying to parse \""
-           << surah_path << "\"" << " as json" << ": "
-           << "\n"
-           << e.what() << "\n";
-      exit(1);
-    }
-  } else {
-    cerr << "<< Manzil: could not open \"" << surah_path << "\"\n";
-    exit(1);
-  }
-  constexpr int expected_count = manzil::k_surah_count;
-  if (parsed_surah.size() != expected_count) {
-    cerr << "<< Manzil: expected " << expected_count << " surahs parsed, got "
-         << parsed_surah.size() << " instead" << "\n";
-    exit(1);
+  try {
+    parsed_surah = manzil::ParseJSON(paths.surah, manzil::k_surah_count);
+    parsed_ar = manzil::ParseJSON(paths.ar, manzil::k_ayah_count);
+    parsed_en = manzil::ParseJSON(paths.en, manzil::k_ayah_count);
+    parsed_notes = manzil::ParseJSON(paths.notes);
+  } catch (const std::exception& e) {
+    std::cerr << "<< Manzil: fatal error loading Quran data: " << e.what()
+              << "\n";
+    std::exit(1);
   }
 
+  /*
+   * surah_ 
+   *
+   * parsed_surah is structure like this: 
+   * [{"number":1,"name":{"arabic":"الفاتحة","transliteration":"Al-Fatihah","english":"The Opening"},"versesCount":7}, ...]
+   *
+   */
   for (uint i = 0; i < manzil::k_surah_count; i++) {
     manzil::surah foo{};
     foo.number = parsed_surah[i]["number"].get<int>();
@@ -50,97 +53,66 @@ Quranite::Quranite(const string& surah_path, const string& verses_ar,
     surah_[i] = foo;
   }
 
-  json parsed_ar{};
-  ifstream file_ar{verses_ar};
-  if (file_ar.is_open()) {
-    try {
+  /*
+   * verse_ 
+   *
+   * parsed_en is structured like this:
+   * [[1,1,"In the name of God, the Almighty,<sup>1</sup> the Merciful."], ...]
+   *
+   * parsed_ar is structured like this:
+   * [[1,1,"بِسْمِ ٱللَّـهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"], ...]
+   *
+   */
+  uint curr_surah_idx = 0;
+  manzil::surah_verses verses_in_surah{};
 
-      parsed_ar = json::parse(file_ar);
-
-    } catch (exception& e) {
-      cerr << "<< Manzil: encountered an error while trying to parse \""
-           << verses_ar << "\"" << " as json" << ": "
-           << "\n"
-           << e.what() << "\n";
-      exit(1);
-    }
-  } else {
-    cerr << "<< Manzil: could not open \"" << verses_ar << "\"\n";
-    exit(1);
-  }
-  constexpr int expected_ayah = manzil::k_ayah_count;
-  if (parsed_ar.size() != expected_ayah) {
-    cerr << "<< Manzil: expected " << expected_ayah << " ayah parsed, got "
-         << parsed_ar.size() << " instead" << "\n";
-    exit(1);
-  }
-
-  json parsed_en{};
-  ifstream file_en{verses_en};
-  if (file_en.is_open()) {
-    try {
-
-      parsed_en = json::parse(file_en);
-
-    } catch (exception& e) {
-      cerr << "<< Manzil: encountered an error while trying to parse \""
-           << verses_en << "\"" << " as json" << ": "
-           << "\n"
-           << e.what() << "\n";
-      exit(1);
-    }
-  } else {
-    cerr << "<< Manzil: could not open \"" << verses_en << "\"\n";
-    exit(1);
-  }
-  if (parsed_en.size() != expected_ayah) {
-    cerr << "<< Manzil: expected " << expected_ayah << " ayah parsed, got "
-         << parsed_en.size() << " instead" << "\n";
-    exit(1);
-  }
-
-  uint surah_index = 0;
-  manzil::verse_v foo_v{};
   for (uint i = 0; i < manzil::k_ayah_count; i++) {
-    manzil::verse foo{};
-    auto current_num = parsed_ar[i][0].get<uint>();
-    if (current_num - 1 != surah_index) {
-      verse_[surah_index] = foo_v;
-      surah_index += 1;
-      foo_v.clear();
-    }
-    foo.arabic = parsed_ar[i][2].get<string>();
-    foo.english = parsed_en[i][2].get<string>();
-    foo_v.emplace_back(foo);
-  }
-  verse_[surah_index] = foo_v;
+    manzil::verse verse{};
+    verse.arabic = parsed_ar[i][2].get<string>();
+    verse.english = parsed_en[i][2].get<string>();
+    verses_in_surah.emplace_back(verse);
 
-  json parsed_notes{};
-  ifstream file_notes{notes_path};
-  if (file_notes.is_open()) {
-    try {
-      parsed_notes = json::parse(file_notes);
-    } catch (exception& e) {
-      cerr << "<< Manzil: encountered an error while trying to parse \""
-           << notes_path << "\" as json:\n"
-           << e.what() << "\n";
-      exit(1);
+    bool is_last_ayah = (i == manzil::k_ayah_count - 1);
+    uint next_surah_idx =
+        is_last_ayah ? 0 : parsed_ar[i + 1][0].get<uint>() - 1;
+    bool next_ayah_starts_new_surah =
+        !is_last_ayah && next_surah_idx != curr_surah_idx;
+
+    if (is_last_ayah || next_ayah_starts_new_surah) {
+      verse_[curr_surah_idx] = verses_in_surah;
+      verses_in_surah.clear();
+      curr_surah_idx += 1;
     }
-  } else {
-    cerr << "<< Manzil: could not open \"" << notes_path << "\"\n";
-    exit(1);
   }
 
+  /*
+   * note_ 
+   * 
+   * parsed_notes structured like this: 
+   * [... , ["1:3:1", "1. Arabic: <i>ra\u1e25m\u0101n</i>. \
+     Typically rendered <i>most merciful</i>. \
+     See <a>36:23</a> and note thereto, note to <a>1:1</a>, and Notepad I."], ...]
+   *
+   */
   for (uint i = 0; i < manzil::k_surah_count; i++) {
     note_[i].resize(static_cast<uint>(surah_[i].verses_count));
   }
-
   for (const auto& entry : parsed_notes) {
     string key = entry[0].get<string>();
     string text = entry[1].get<string>();
 
-    uint surah_n = 0, ayah_n = 0, note_n = 0;
-    std::sscanf(key.c_str(), "%u:%u:%u", &surah_n, &ayah_n, &note_n);
+    uint surah_n = 0;
+    uint ayah_n = 0;
+    uint note_n = 0;
+
+    int fields_matched =
+        // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)
+        std::sscanf(key.c_str(), "%u:%u:%u", &surah_n, &ayah_n, &note_n);
+    if (fields_matched != 3) {
+      std::cerr << "<< Manzil: fatal error malformed note key " << key
+                << " expected format \"surah:ayah:note\"";
+      std::exit(1);
+    }
 
     note_[surah_n - 1][ayah_n - 1].emplace_back(text);
   }

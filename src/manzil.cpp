@@ -39,4 +39,33 @@ path GetExecutableDir() {
     return ".";
   }
 }
+
+// TODO: rather than runtime_error
+//       it might be worth it to make
+//       my own error type.
+//       but its not worth it yet currently,
+//       the priority is low.
+json ParseJSON(const string& path) {
+  ifstream file{path};
+  if (!file.is_open()) {
+    throw std::runtime_error("could not open \"" + path + "\"");
+  }
+  try {
+    return json::parse(file);
+  } catch (const json::parse_error& e) {
+    throw std::runtime_error("failed to parse \"" + path +
+                             "\" as json: " + e.what());
+  }
+}
+
+json ParseJSON(const string& path, size_t expected_size) {
+  json parsed_file = ParseJSON(path);
+  if (parsed_file.size() != expected_size) {
+    throw std::runtime_error("expected " + std::to_string(expected_size) +
+                             " entries in \"" + path + "\", got " +
+                             std::to_string(parsed_file.size()));
+  }
+  return parsed_file;
+}
+
 }  // namespace manzil
