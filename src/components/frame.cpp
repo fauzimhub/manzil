@@ -50,7 +50,7 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   surah_list_ = new wxScrolledWindow(this);
 
   auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
-  for (const auto& sur : quranite_.getSurah()) {
+  for (const auto& sur : quranite_.GetSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
                                sur.name_transliteration, sur.name_translation,

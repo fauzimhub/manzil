@@ -44,14 +44,17 @@ class Quranite {
       note_{};  ///< Footnotes, indexed by surah then ayah then note number.
 
  public:
-  explicit Quranite(const string& surah_path, const string& verses_ar,
-                    const string& verses_en, const string& notes_path);
+  explicit Quranite(manzil::quranite_data_paths& paths);
 
-  [[nodiscard]] const manzil::surah_list& getSurah() const { return surah_; }
+  [[nodiscard]] const manzil::surahs_by_number& GetSurah() const {
+    return surah_;
+  }
 
-  [[nodiscard]] const manzil::verse_list& getVerse() const { return verse_; }
+  [[nodiscard]] const manzil::verses_by_surah& GetVerse() const {
+    return verse_;
+  }
 
-  [[nodiscard]] const manzil::note_list& getNote() const { return note_; }
+  [[nodiscard]] const manzil::notes_by_surah& GetNote() const { return note_; }
 };
 
 #endif  // QURANITE_HPP
