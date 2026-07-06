@@ -19,12 +19,13 @@ bool manzil::App::OnInit() {
   return true;
 }
 
-// TODO: only supports Linux via /proc/self/exe;
-// look up Windows (GetModuleFileName)
-// for cross-platform support.
-// forget mac os, i am too poor to have apple device
-path manzil::App::GetExecutableDir() {
+namespace manzil {
 
+// TODO: only supports Linux via /proc/self/exe;
+//       look up Windows (GetModuleFileName)
+//       for cross-platform support.
+//       forget mac os, i am too poor to have apple device
+path GetExecutableDir() {
   string proc_self_exe = "/proc/self/exe";
 
   try {
@@ -38,3 +39,4 @@ path manzil::App::GetExecutableDir() {
     return ".";
   }
 }
+}  // namespace manzil

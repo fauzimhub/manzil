@@ -14,13 +14,16 @@ using std::filesystem::read_symlink;
 Frame::Frame(const wxString& title, int min_width, int min_height)
     : wxFrame(nullptr, wxID_ANY, title),
       quranite_([]() {
-        path exe_dir = manzil::App::GetExecutableDir();
-        return Quranite(
-            (exe_dir / "assets" / "chapters-data.json").string(),
-            (exe_dir / "assets" / "verses_ar_original.json").string(),
+        path exe_dir = manzil::GetExecutableDir();
+        manzil::quranite_data_paths paths;
+        paths.surah = (exe_dir / "assets" / "chapters-data.json").string();
+        paths.ar = (exe_dir / "assets" / "verses_ar_original.json").string();
+        paths.en =
             (exe_dir / "assets" / "verses_en_sam-gerrans_with-notes.json")
-                .string(),
-            (exe_dir / "assets" / "notes_en_sam-gerrans.json").string());
+                .string();
+        paths.notes =
+            (exe_dir / "assets" / "notes_en_sam-gerrans.json").string();
+        return Quranite(paths);
       }())
 
 {

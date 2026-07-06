@@ -1,4 +1,4 @@
-/*
+/* manzil.hpp: Bootstrap Manzil, global util function (get executable directory etc).
 Copyright (c) 2026 Maher Fauzi 
    Permission is hereby granted, free of charge, to any person obtaining a copy of
    this software and associated documentation files (the "Software"), to deal in
@@ -22,41 +22,47 @@ Copyright (c) 2026 Maher Fauzi
 
 #include <wx/wx.h>
 #include <filesystem>
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <string>
 
 using path = std::filesystem::path;
+using ifstream = std::ifstream;
+using string = std::string;
+using json = nlohmann::json;
 
 namespace manzil {
 
 /**
- * @brief Bootstrap Manzil, global util function (get executable directory etc).
+ * @brief Bootstrap Manzil.
  */
 class App : public wxApp {
  public:
   bool OnInit() override;
-
-  /**
-    * @brief Get the directory containing the running executable.
-    *
-    * Resolves the executable's location via the /proc/self/exe symlink
-    * (linux).
-    *
-    * @code
-    * // Example : locate bundled assets (JSON data files)
-    * // relative to the binary rather than the current working directory.
-    *
-    * path exe_dir = manzil::App::GetExecutableDir();
-    * path assets = exe_dir / "assets" / "chapters-data.json";
-    * @endcode
-    * 
-    * @see Frame::Frame
-    *
-    * @return Absolute path to the executable's parent directory, or "."
-    *         if the symlink could not be resolved.
-    *
-    * @note Currently Linux-only (relies on /proc/self/exe).
-   */
-  static path GetExecutableDir();
 };
 
+/**
+ * @brief Get the directory containing the running executable.
+ *
+ * Resolves the executable's location via the /proc/self/exe symlink
+ * (linux).
+ *
+ * @code
+ * // Example : locate bundled assets (JSON data files)
+ * // relative to the binary rather than the current working directory.
+ *
+ * path exe_dir = manzil::GetExecutableDir();
+ * path assets = exe_dir / "assets" / "chapters-data.json";
+ * @endcode
+ * 
+ * @see Frame::Frame
+ *
+ * @return Absolute path to the executable's parent directory, or "."
+ *         if the symlink could not be resolved.
+ *
+ * @note Currently Linux-only (relies on /proc/self/exe).
+ *
+ */
+path GetExecutableDir();
 }  // namespace manzil
 #endif  // MANZIL_HPP
