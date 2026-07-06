@@ -1,10 +1,7 @@
 #include <wx/wx.h>
 
-#include <unordered_map>
 #include "../events.hpp"
 #include "surah_card.hpp"
-
-using font_map = std::unordered_map<wxString, wxFont>;
 
 SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
                      wxString transliteration, wxString translation,
@@ -27,13 +24,13 @@ SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
 
 void SurahCard::OnPaint(wxPaintEvent& event) {
   (void)event;
-  wxPaintDC device_contexts(this);
+  wxPaintDC dev_ctx(this);
   const wxSize size = GetClientSize();
   const int surahcard_w = size.GetWidth();
   const int surahcard_h = size.GetHeight();
 
-  device_contexts.SetBackground(wxBrush(GetParent()->GetBackgroundColour()));
-  device_contexts.Clear();
+  dev_ctx.SetBackground(wxBrush(GetParent()->GetBackgroundColour()));
+  dev_ctx.Clear();
 
   const wxColour white(255, 255, 255);
   const wxColour gray(200, 200, 200);
@@ -43,67 +40,68 @@ void SurahCard::OnPaint(wxPaintEvent& event) {
   constexpr wxCoord rect_y = 0;
   constexpr double rect_radius = 10;
 
-  device_contexts.SetPen(wxPen(white, pen_width));
+  dev_ctx.SetPen(wxPen(white, pen_width));
   wxColour brush_colour = hovered_ ? wxColour(gray) : wxColour(white);
-  device_contexts.SetBrush(wxBrush(brush_colour));
-  device_contexts.SetTextForeground(black);
+  dev_ctx.SetBrush(wxBrush(brush_colour));
+  dev_ctx.SetTextForeground(black);
 
-  device_contexts.DrawRoundedRectangle(rect_x, rect_y, surahcard_w, surahcard_h,
-                                       rect_radius);
+  dev_ctx.DrawRoundedRectangle(rect_x, rect_y, surahcard_w, surahcard_h,
+                               rect_radius);
 
-  wxCoord text_y = padding_;
+  wxCoord text_start_y = k_padding;
 
-  auto centerpad_text = [&](const wxString& text) {
-    wxSize ext = device_contexts.GetTextExtent(text);
-    device_contexts.DrawText(text, (surahcard_w - ext.GetWidth()) / 2, text_y);
-    text_y += ext.GetHeight() + padding_;
+  // this helper lambda is taking text, weight, and size
+  // then draw and center it on device contexts
+  // this lambda implicitly change dev_ctx and text_y
+  // also need this->FromDIP(), and surahcard_w from local
+  auto centerpad_text = [&](int font_size, wxFontWeight weight,
+                            const wxString& text) {
+    dev_ctx.SetFont(wxFont(FromDIP(font_size), wxFONTFAMILY_DEFAULT,
+                           wxFONTSTYLE_NORMAL, weight));
+    wxSize ext = dev_ctx.GetTextExtent(text);
+    dev_ctx.DrawText(text, (surahcard_w - ext.GetWidth()) / 2, text_start_y);
+    text_start_y += ext.GetHeight() + k_padding;
   };
 
-  device_contexts.SetFont(wxFont(FromDIP(number_fontsize_),
-                                 wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                                 wxFONTWEIGHT_BOLD));
-  centerpad_text(number_);
-
-  device_contexts.SetFont(wxFont(FromDIP(name_fontsize_), wxFONTFAMILY_DEFAULT,
-                                 wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-  centerpad_text(transliteration_ + " | " + arabic_);
-
-  device_contexts.SetFont(wxFont(FromDIP(translation_fontsize_),
-                                 wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                                 wxFONTWEIGHT_BOLD));
-  centerpad_text(translation_);
+  centerpad_text(k_number_fontsize, wxFONTWEIGHT_BOLD, number_);
+  centerpad_text(k_name_fontsize, wxFONTWEIGHT_NORMAL,
+                 transliteration_ + " | " + arabic_);
+  centerpad_text(k_translation_fontsize, wxFONTWEIGHT_BOLD, translation_);
 
   const wxString verses_str = verses_ + " verses";
-  device_contexts.SetFont(wxFont(FromDIP(verses_fontsize_),
-                                 wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                                 wxFONTWEIGHT_NORMAL));
-  wxSize vext = device_contexts.GetTextExtent(verses_str);
-  const wxCoord verses_x = (surahcard_w - vext.GetWidth()) / 2;
-  const wxCoord verses_y = text_y;
-  device_contexts.SetPen(wxPen(gray, pen_width));
-  device_contexts.DrawRoundedRectangle(
-      verses_x, verses_y, vext.GetWidth() + padding_,
-      vext.GetHeight() + padding_, rect_radius / 2);
-  device_contexts.DrawText(verses_str, verses_x + (padding_ / 2),
-                           verses_y + (padding_ / 2));
+  dev_ctx.SetFont(wxFont(FromDIP(k_verses_fontsize), wxFONTFAMILY_DEFAULT,
+                         wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+  wxSize verses_ext = dev_ctx.GetTextExtent(verses_str);
+  const wxCoord verses_x = (surahcard_w - verses_ext.GetWidth()) / 2;
+  const wxCoord verses_y = text_start_y;
+  dev_ctx.SetPen(wxPen(gray, pen_width));
+  dev_ctx.DrawRoundedRectangle(
+      verses_x, verses_y, verses_ext.GetWidth() + k_padding,
+      verses_ext.GetHeight() + k_padding, rect_radius / 2);
+  dev_ctx.DrawText(verses_str, verses_x + (k_padding / 2),
+                   verses_y + (k_padding / 2));
 }
 
 void SurahCard::UpdateMinSize() {
-  wxClientDC device_contexts(this);
-  wxCoord total_height = padding_;
+  wxClientDC dev_ctx(this);
+  wxCoord total_height = k_padding;
 
+  // this helper lambda is taking text, weight, and size
+  // then measure it by implicitly changing total_height
+  // also implicitly change dev_ctx
+  // also need this->FromDIP() from local
   auto measure = [&](int font_size, wxFontWeight weight, const wxString& text) {
-    device_contexts.SetFont(wxFont(FromDIP(font_size), wxFONTFAMILY_DEFAULT,
-                                   wxFONTSTYLE_NORMAL, weight));
-    total_height += device_contexts.GetTextExtent(text).GetHeight() + padding_;
+    dev_ctx.SetFont(wxFont(FromDIP(font_size), wxFONTFAMILY_DEFAULT,
+                           wxFONTSTYLE_NORMAL, weight));
+    total_height += dev_ctx.GetTextExtent(text).GetHeight() + k_padding;
   };
 
-  measure(number_fontsize_, wxFONTWEIGHT_BOLD, number_);
-  measure(name_fontsize_, wxFONTWEIGHT_NORMAL,
+  measure(k_number_fontsize, wxFONTWEIGHT_BOLD, number_);
+  measure(k_name_fontsize, wxFONTWEIGHT_NORMAL,
           transliteration_ + " | " + arabic_);
-  measure(translation_fontsize_, wxFONTWEIGHT_BOLD, translation_);
-  measure(verses_fontsize_, wxFONTWEIGHT_NORMAL, verses_ + " verses");
-  total_height += padding_;
+  measure(k_translation_fontsize, wxFONTWEIGHT_BOLD, translation_);
+  measure(k_verses_fontsize, wxFONTWEIGHT_NORMAL, verses_ + " verses");
+  total_height += k_padding;
 
   SetMinSize(wxSize(wxDefaultCoord, total_height));
 }
