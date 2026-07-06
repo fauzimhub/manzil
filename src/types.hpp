@@ -1,4 +1,4 @@
-/* types.hpp : types and global constant, unique to manzil (surah, verse, notes).  
+/* types.hpp: types and global constant, unique to manzil (surah, verse, notes).  
 Copyright (c) 2026 Maher Fauzi 
    Permission is hereby granted, free of charge, to any person obtaining a copy of
    this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,22 @@ Copyright (c) 2026 Maher Fauzi
 #include <vector>
 
 namespace manzil {
+
+/**
+ * @brief The set of file paths Quranite needs to load its data — one
+ *        JSON file each for surah metadata, Arabic verses, English
+ *        verses with notes, and standalone footnotes.
+ *
+ * @warning The "placeholder" default values should never appear in
+ *          practice, they indicate the paths were never assigned
+ *          before being passed to Quranite's constructor.
+ */
+struct quranite_data_paths {
+  std::string surah = "placeholder";
+  std::string ar = "placeholder";
+  std::string en = "placeholder";
+  std::string notes = "placeholder";
+};
 
 /**
  * @brief Metadata for a single surah (chapter) of the Quran.
@@ -52,8 +68,8 @@ struct verse {
   std::string english = "placeholder";
 };
 
-constexpr int k_surah_count = 114;
-constexpr int k_ayah_count = 6236;
+constexpr uint k_surah_count = 114;
+constexpr uint k_ayah_count = 6236;
 
 using surahs_by_number = std::array<surah, k_surah_count>;
 
