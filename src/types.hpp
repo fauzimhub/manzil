@@ -1,11 +1,37 @@
-#ifndef N_TYPES_H_
-#define N_TYPES_H_
+/* types.hpp : types and global constant, unique to manzil (surah, verse, notes).  
+Copyright (c) 2026 Maher Fauzi 
+   Permission is hereby granted, free of charge, to any person obtaining a copy of
+   this software and associated documentation files (the "Software"), to deal in
+   the Software without restriction, including without limitation the rights to
+   use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+   of the Software, and to permit persons to whom the Software is furnished to do
+   so, subject to the following conditions:
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+*/
+#ifndef TYPES_HPP
+#define TYPES_HPP
 
 #include <array>
 #include <string>
 #include <vector>
 
 namespace manzil {
+
+/**
+ * @brief Metadata for a single surah (chapter) of the Quran.
+ *
+ * @warning Default member values ("noname", 0) are placeholders only
+ *          and should never appear in practice, they indicate a
+ *          surah that failed to load correctly from chapters-data.json.
+ */
 struct surah {
   int number = 0;
   std::string name_arabic = "noname";
@@ -14,6 +40,13 @@ struct surah {
   int verses_count = 0;
 };
 
+/**
+ * @brief A single verse (ayah), paired in Arabic and English.
+ *
+ * @warning The "placeholder" default values should never appear in
+ *          practice, they indicate a verse that failed to load
+ *          correctly from the source JSON files.
+ */
 struct verse {
   std::string arabic = "placeholder";
   std::string english = "placeholder";
@@ -22,14 +55,14 @@ struct verse {
 constexpr int k_surah_count = 114;
 constexpr int k_ayah_count = 6236;
 
-using surah_list = std::array<surah, k_surah_count>;
+using surahs_by_number = std::array<surah, k_surah_count>;
 
-using verse_v = std::vector<verse>;
-using verse_list = std::array<verse_v, k_surah_count>;
+using surah_verses = std::vector<verse>;
+using verses_by_surah = std::array<surah_verses, k_surah_count>;
 
-using note_v = std::vector<std::string>;
-using ayah_notes = std::vector<note_v>;
-using note_list = std::array<ayah_notes, k_surah_count>;
+using ayah_notes = std::vector<std::string>;
+using surah_notes = std::vector<ayah_notes>;
+using notes_by_surah = std::array<surah_notes, k_surah_count>;
 }  // namespace manzil
 
-#endif
+#endif  //TYPES_HPP
