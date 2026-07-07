@@ -70,7 +70,7 @@ Quranite::Quranite(manzil::quranite_data_paths& paths) {
     manzil::verse verse{};
     verse.arabic = parsed_ar[i][2].get<string>();
     verse.english = parsed_en[i][2].get<string>();
-    verses_in_surah.emplace_back(verse);
+    verses_in_surah.push_back(verse);
 
     bool is_last_ayah = (i == manzil::k_ayah_count - 1);
     uint next_surah_idx =
@@ -114,6 +114,6 @@ Quranite::Quranite(manzil::quranite_data_paths& paths) {
       std::exit(1);
     }
 
-    note_[surah_n - 1][ayah_n - 1].emplace_back(text);
+    note_[surah_n - 1][ayah_n - 1].push_back(text);
   }
 }
