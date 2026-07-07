@@ -1,27 +1,9 @@
 #include "reader_dialog.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <optional>
 #include "../types.hpp"
 
 using json = nlohmann::json;
-
-namespace {
-struct VerseRef {
-  uint surah;
-  uint begin_ayah;
-  uint end_ayah;
-};
-
-std::optional<VerseRef> ParseVerseRef(const std::string& ref) {
-  uint surah = 0, begin_ayah = 0, end_ayah = 0;
-  if (std::sscanf(ref.c_str(), "%u:%u-%u", &surah, &begin_ayah, &end_ayah) == 3)
-    return VerseRef{surah, begin_ayah, end_ayah};
-  if (std::sscanf(ref.c_str(), "%u:%u", &surah, &begin_ayah) == 2)
-    return VerseRef{surah, begin_ayah, begin_ayah};
-  return std::nullopt;
-}
-}  // namespace
 
 ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite, uint surah,
                            uint begin_ayah, uint end_ayah)
@@ -63,17 +45,37 @@ void ReaderDialog::OnBack(wxCommandEvent& event) {
 }
 
 void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
+  json webview_json;
   try {
-    auto j = json::parse(event.GetString().ToStdString());
-    if (!j.contains("ref"))
-      return;
-    auto ref = ParseVerseRef(j["ref"].get<std::string>());
-    if (!ref)
-      return;
-    Navigate(ref->surah, ref->begin_ayah, ref->end_ayah);
+    webview_json = json::parse(event.GetString().ToStdString());
   } catch (const std::exception& e) {
-    std::cerr << "<< Manzil: OnVerseRef parse error: " << e.what() << "\n";
+    std::cerr
+        << "<< Manzil: ReaderDialog::OnVerseRef webview json parse error: "
+        << e.what() << "\n";
   }
+  if (!webview_json.contains("ref")) {
+    return;
+  }
+
+  manzil::nav_entry entry;
+
+  std::string webview_str = webview_json["ref"].get<std::string>();
+  if (std::sscanf(webview_str.c_str(), "%u:%u-%u", &entry.surah,
+                  &entry.begin_ayah, &entry.end_ayah) == 3) {
+  }
+
+  else if (std::sscanf(webview_str.c_str(), "%u:%u", &entry.surah,
+                       &entry.begin_ayah) == 2) {
+    entry.end_ayah = entry.begin_ayah;
+  }
+
+  else {
+    std::cerr
+        << "<< Manzil: ReaderDialog::OnVerseRef webview string parse error \n";
+    return;
+  }
+
+  Navigate(entry);
 }
 
 wxString ReaderDialog::BuildHtml(uint surah, uint begin_ayah, uint end_ayah) {
