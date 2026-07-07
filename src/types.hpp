@@ -26,7 +26,7 @@ Copyright (c) 2026 Maher Fauzi
 namespace manzil {
 
 /**
- * @brief The set of file paths Quranite needs to load its data — one
+ * @brief The set of file paths Quranite needs to load its data, one
  *        JSON file each for surah metadata, Arabic verses, English
  *        verses with notes, and standalone footnotes.
  *
@@ -39,6 +39,21 @@ struct quranite_data_paths {
   std::string ar = "placeholder";
   std::string en = "placeholder";
   std::string notes = "placeholder";
+};
+
+/**
+ * @brief parameter used mainly for pop-up verse 
+ *
+ * @see ReaderDialog
+ *
+ * @warning Default member value 0 are placeholders only
+ *          and should never appear in practice, they indicate a
+ *          entry failed to be initialized.
+ */
+struct nav_entry {
+  uint surah = 0;
+  uint begin_ayah = 0;
+  uint end_ayah = 0;
 };
 
 /**
