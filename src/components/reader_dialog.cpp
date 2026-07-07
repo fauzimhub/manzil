@@ -37,14 +37,19 @@ void ReaderDialog::Navigate(manzil::nav_entry entry) {
   webview_->SetPage(BuildHtml(entry), "");
 }
 
+//TODO: OnBack should not pop history_
+//      it should just show the previous dialog
+//      like how "back" should be
+//      so there might be a need for next btn
 void ReaderDialog::OnBack(wxCommandEvent& event) {
   (void)event;
-  if (history_.size() <= 1)
+  if (history_.size() <= 1) {
     return;
+  }
   history_.pop_back();
   const auto& prev = history_.back();
-  history_.pop_back();  // Navigate will push it back
-  Navigate(prev.surah, prev.begin_ayah, prev.end_ayah);
+  history_.pop_back();
+  Navigate(prev);
 }
 
 void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
