@@ -5,11 +5,12 @@
 
 using json = nlohmann::json;
 
-ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite, uint surah,
-                           uint begin_ayah, uint end_ayah)
+ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
+                           manzil::nav_entry entry)
     : wxDialog(parent, wxID_ANY, "Note", wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
       quranite_(quranite) {
+
   back_btn_ = new wxButton(this, wxID_ANY, "<< Back");
   back_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnBack, this);
   back_btn_->Hide();
@@ -19,12 +20,14 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite, uint surah,
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED,
                  &ReaderDialog::OnVerseRef, this);
 
+  constexpr int back_btn_border = 5;
+
   auto* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(back_btn_, 0, wxALL, 5);
+  sizer->Add(back_btn_, 0, wxALL, back_btn_border);
   sizer->Add(webview_, 1, wxEXPAND);
   SetSizer(sizer);
 
-  Navigate(surah, begin_ayah, end_ayah);
+  Navigate(entry);
 }
 
 void ReaderDialog::Navigate(uint surah, uint begin_ayah, uint end_ayah) {
