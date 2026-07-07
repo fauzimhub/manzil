@@ -30,11 +30,11 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   Navigate(entry);
 }
 
-void ReaderDialog::Navigate(uint surah, uint begin_ayah, uint end_ayah) {
-  history_.push_back({surah, begin_ayah, end_ayah});
+void ReaderDialog::Navigate(manzil::nav_entry entry) {
+  history_.push_back(entry);
   back_btn_->Show(history_.size() > 1);
   Layout();
-  webview_->SetPage(BuildHtml(surah, begin_ayah, end_ayah), "");
+  webview_->SetPage(BuildHtml(entry), "");
 }
 
 void ReaderDialog::OnBack(wxCommandEvent& event) {
