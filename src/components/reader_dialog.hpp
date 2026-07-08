@@ -62,7 +62,7 @@ class ReaderDialog : public wxDialog {
   std::vector<manzil::nav_entry> history_{
       0};  ///< contain stack of opened entry
 
-  wxString BuildHtml(manzil::nav_entry);
+  wxString BuildHtml(manzil::nav_entry entry);
 
   /**
     * @brief Handle when back button in dialog is clicked.
