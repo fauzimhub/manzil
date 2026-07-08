@@ -57,9 +57,10 @@ class ReaderDialog : public wxDialog {
 
  private:
   Quranite& quranite_;
-  wxWebView* webview_;
-  wxButton* back_btn_;
-  std::vector<manzil::nav_entry> history_;  ///< contain stack of opened entry
+  wxWebView* webview_ = nullptr;
+  wxButton* back_btn_ = nullptr;
+  std::vector<manzil::nav_entry> history_{
+      0};  ///< contain stack of opened entry
 
   wxString BuildHtml(manzil::nav_entry);
 
