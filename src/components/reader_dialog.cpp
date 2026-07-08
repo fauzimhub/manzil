@@ -109,24 +109,20 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
   for (unsigned int ayah_idx = entry.begin_ayah - 1;
        ayah_idx < entry.end_ayah && ayah_idx < surah_verses.size();
        ayah_idx++) {
+
     const auto& verse = surah_verses[ayah_idx];
-
-    wxString notes_json = "[";
-
-    html += wxString::Format(
-        "<tr data-ayah=\"%u\" data-notes='%s'>"
-        "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
-        ayah_idx, notes_json, wxString::FromUTF8(verse.arabic),
-        wxString::FromUTF8(verse.english));
+    json notes_array = json::array();
 
     const auto& ayah_notes = all_notes[entry.surah - 1][ayah_idx];
     for (const auto& ayah_note : ayah_notes) {
-      wxString note_str = wxString::FromUTF8(ayah_note);
+
+      std::string note_str = ayah_note;
 
       unsigned int surah_n;
       unsigned int ayah_n;
       unsigned int note_n;
-      if (std::sscanf(note_str, "%u:%u:%u", &surah_n, &ayah_n, &note_n) == 3) {
+      if (std::sscanf(note_str.c_str(), "%u:%u:%u", &surah_n, &ayah_n,
+                      &note_n) == 3) {
 
         if (surah_n > 0 &&                                        //
             surah_n <= all_notes.size() &&                        //
@@ -135,8 +131,7 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
             note_n > 0 &&                                         //
             note_n <= all_notes[surah_n - 1][ayah_n - 1].size())  //
         {
-          note_str = wxString::FromUTF8(
-              all_notes[surah_n - 1][ayah_n - 1][note_n - 1]);
+          note_str = all_notes[surah_n - 1][ayah_n - 1][note_n - 1];
         } else {
           // Reference parsed but indices out of range, malformed data.
           std::cerr << "<< Manzil: malformed note reference \"" << ayah_note
@@ -150,12 +145,18 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
         // not a cross-reference. note_str already holds the correct value.
       }
 
-      html += wxString::Format(
-          "<tr class=\"note-row\"><td colspan=\"2\" "
-          "style=\"color:#aaa; font-size:13px; padding:6px 10px; "
-          "border-bottom:1px solid #444;\">%s</td></tr>",
-          note_str);
+      notes_array.push_back(note_str);
     }
+
+    wxString notes_json = wxString::FromUTF8(notes_array.dump());
+
+    notes_json.Replace("'", "&#39;");
+
+    html += wxString::Format(
+        "<tr data-ayah=\"%u\" data-notes='%s'>"
+        "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
+        ayah_idx + 1, notes_json, wxString::FromUTF8(verse.arabic),
+        wxString::FromUTF8(verse.english));
   }
 
   html +=
