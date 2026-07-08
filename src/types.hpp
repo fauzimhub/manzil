@@ -51,9 +51,9 @@ struct quranite_data_paths {
  *          entry failed to be initialized.
  */
 struct nav_entry {
-  uint surah = 0;
-  uint begin_ayah = 0;
-  uint end_ayah = 0;
+  unsigned int surah = 0;
+  unsigned int begin_ayah = 0;
+  unsigned int end_ayah = 0;
 };
 
 /**
@@ -83,8 +83,8 @@ struct verse {
   std::string english = "placeholder";
 };
 
-constexpr uint k_surah_count = 114;
-constexpr uint k_ayah_count = 6236;
+constexpr unsigned int k_surah_count = 114;
+constexpr unsigned int k_ayah_count = 6236;
 
 using surahs_by_number = std::array<surah, k_surah_count>;
 

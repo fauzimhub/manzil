@@ -31,7 +31,8 @@ class Frame : public wxFrame {
   static constexpr int k_min_width = 400;
   static constexpr int k_min_height = 300;
 
-  uint surah_number_ = 1;  ///< Currently displayed surah number (1-114).
+  unsigned int surah_number_ =
+      1;  ///< Currently displayed surah number (1-114).
   Quranite quranite_;
 
   Reader* reader_ =

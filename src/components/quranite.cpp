@@ -42,7 +42,7 @@ Quranite::Quranite(manzil::quranite_data_paths& paths) {
    * [{"number":1,"name":{"arabic":"الفاتحة","transliteration":"Al-Fatihah","english":"The Opening"},"versesCount":7}, ...]
    *
    */
-  for (uint i = 0; i < manzil::k_surah_count; i++) {
+  for (unsigned int i = 0; i < manzil::k_surah_count; i++) {
     manzil::surah foo{};
     foo.number = parsed_surah[i]["number"].get<int>();
     foo.name_arabic = parsed_surah[i]["name"]["arabic"].get<string>();
@@ -63,18 +63,18 @@ Quranite::Quranite(manzil::quranite_data_paths& paths) {
    * [[1,1,"بِسْمِ ٱللَّـهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"], ...]
    *
    */
-  uint curr_surah_idx = 0;
+  unsigned int curr_surah_idx = 0;
   manzil::surah_verses verses_in_surah{};
 
-  for (uint i = 0; i < manzil::k_ayah_count; i++) {
+  for (unsigned int i = 0; i < manzil::k_ayah_count; i++) {
     manzil::verse verse{};
     verse.arabic = parsed_ar[i][2].get<string>();
     verse.english = parsed_en[i][2].get<string>();
     verses_in_surah.push_back(verse);
 
     bool is_last_ayah = (i == manzil::k_ayah_count - 1);
-    uint next_surah_idx =
-        is_last_ayah ? 0 : parsed_ar[i + 1][0].get<uint>() - 1;
+    unsigned int next_surah_idx =
+        is_last_ayah ? 0 : parsed_ar[i + 1][0].get<unsigned int>() - 1;
     bool next_ayah_starts_new_surah =
         !is_last_ayah && next_surah_idx != curr_surah_idx;
 
@@ -94,16 +94,16 @@ Quranite::Quranite(manzil::quranite_data_paths& paths) {
      See <a>36:23</a> and note thereto, note to <a>1:1</a>, and Notepad I."], ...]
    *
    */
-  for (uint i = 0; i < manzil::k_surah_count; i++) {
-    note_[i].resize(static_cast<uint>(surah_[i].verses_count));
+  for (unsigned int i = 0; i < manzil::k_surah_count; i++) {
+    note_[i].resize(static_cast<unsigned int>(surah_[i].verses_count));
   }
   for (const auto& entry : parsed_notes) {
     string key = entry[0].get<string>();
     string text = entry[1].get<string>();
 
-    uint surah_n = 0;
-    uint ayah_n = 0;
-    uint note_n = 0;
+    unsigned int surah_n = 0;
+    unsigned int ayah_n = 0;
+    unsigned int note_n = 0;
 
     int fields_matched =
         // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)

@@ -87,7 +87,7 @@ void Frame::OnQuit(wxCommandEvent& event) {
 }
 
 void Frame::OnSurahSelected(wxCommandEvent& event) {
-  surah_number_ = static_cast<uint>(event.GetInt());
+  surah_number_ = static_cast<unsigned int>(event.GetInt());
 
   if (reader_ == nullptr) {
     reader_ = new Reader(this, quranite_, surah_number_);
