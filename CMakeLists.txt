@@ -12,7 +12,24 @@ set(wxBUILD_SHARED OFF)
 set(wxBUILD_TESTS OFF)
 set(wxBUILD_SAMPLES OFF)
 set(wxBUILD_DEMOS OFF)
+
+set(wxUSE_REGEX OFF CACHE BOOL "" FORCE)
+set(wxUSE_NOTIFICATION_MESSAGE OFF CACHE BOOL "" FORCE)
+set(wxUSE_ZLIB OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBJPEG OFF CACHE BOOL "" FORCE)
+set(wxUSE_ARTPROVIDER_TANGO OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBPNG OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBTIFF OFF CACHE BOOL "" FORCE)
+set(wxUSE_SVG OFF CACHE BOOL "" FORCE)
+set(wxUSE_NANOSVG OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBWEBP OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBSDL OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBLZMA OFF CACHE BOOL "" FORCE)
+set(wxUSE_LIBMSPACK OFF CACHE BOOL "" FORCE)
+
 set(JSON_BuildTests OFF)
+
+set(wxUSE_EXPAT builtin CACHE STRING "" FORCE)
 set(wxUSE_WEBVIEW ON)
 set(wxUSE_WEBVIEW_WEBKIT ON)
 
@@ -47,8 +64,12 @@ target_compile_definitions(
 target_compile_options(
   ${EXECUTABLE_NAME}
   PRIVATE
-    $<$<CONFIG:Debug>:-g -std=c++17 -pedantic -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wno-enum-enum-conversion>
-    $<$<CONFIG:Release>:-Os -std=c++17 -s -flto=auto -fno-ident -DNDEBUG>)
+    $<$<CONFIG:Debug>:-g -pedantic -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wno-enum-enum-conversion>
+    $<$<CONFIG:Release>:-Os -flto=auto -fvisibility=hidden -fno-ident -DNDEBUG -ffunction-sections -fdata-sections>)
+
+target_link_options(
+  ${EXECUTABLE_NAME}
+  PRIVATE $<$<CONFIG:Release>:-s -flto=auto -Wl,--gc-sections>)
 
 target_compile_definitions(
   ${EXECUTABLE_NAME}
