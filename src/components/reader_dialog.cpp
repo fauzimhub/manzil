@@ -86,7 +86,7 @@ void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
   Navigate(entry);
 }
 
-wxString ReaderDialog::BuildHtml(uint surah, uint begin_ayah, uint end_ayah) {
+wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
   wxString html =
       "<html><head><style>"
       "body { background:#282c34; color:#ffffff; "
@@ -101,40 +101,59 @@ wxString ReaderDialog::BuildHtml(uint surah, uint begin_ayah, uint end_ayah) {
       ".note-row a:hover { text-decoration:underline; }"
       "</style></head><body><table>";
 
-  const auto& all_verses = quranite_.getVerse()[surah - 1];
-  const auto& all_notes = quranite_.getNote();
+  const auto& surah_verses = quranite_.GetVerse()[entry.surah - 1];
+  const auto& all_notes = quranite_.GetNote();
 
-  uint ayah = begin_ayah;
-  for (uint i = begin_ayah - 1; i < end_ayah && i < all_verses.size(); i++) {
-    const auto& ver = all_verses[i];
+  for (unsigned int ayah_idx = entry.begin_ayah - 1;
+       ayah_idx < entry.end_ayah && ayah_idx < surah_verses.size();
+       ayah_idx++) {
+    const auto& verse = surah_verses[ayah_idx];
 
     wxString notes_json = "[";
 
     html += wxString::Format(
         "<tr data-ayah=\"%u\" data-notes='%s'>"
         "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
-        ayah, notes_json, wxString::FromUTF8(ver.arabic),
-        wxString::FromUTF8(ver.english));
+        ayah_idx, notes_json, wxString::FromUTF8(verse.arabic),
+        wxString::FromUTF8(verse.english));
 
-    const auto& ayah_notes = all_notes[surah - 1][ayah - 1];
-    for (size_t n = 0; n < ayah_notes.size(); n++) {
-      wxString note_str = wxString::FromUTF8(ayah_notes[n]);
-      unsigned long a, b, c;
-      if (std::sscanf(note_str, "%lu:%lu:%lu", &a, &b, &c) == 3) {
-        if (a > 0 && a <= all_notes.size() && b > 0 &&
-            b <= all_notes[a - 1].size() && c > 0 &&
-            c <= all_notes[a - 1][b - 1].size()) {
-          note_str = wxString::FromUTF8(all_notes[a - 1][b - 1][c - 1]);
+    const auto& ayah_notes = all_notes[entry.surah - 1][ayah_idx];
+    for (const auto& ayah_note : ayah_notes) {
+      wxString note_str = wxString::FromUTF8(ayah_note);
+
+      unsigned int surah_n;
+      unsigned int ayah_n;
+      unsigned int note_n;
+      if (std::sscanf(note_str, "%u:%u:%u", &surah_n, &ayah_n, &note_n) == 3) {
+
+        if (surah_n > 0 &&                                        //
+            surah_n <= all_notes.size() &&                        //
+            ayah_n > 0 &&                                         //
+            ayah_n <= all_notes[surah_n - 1].size() &&            //
+            note_n > 0 &&                                         //
+            note_n <= all_notes[surah_n - 1][ayah_n - 1].size())  //
+        {
+          note_str = wxString::FromUTF8(
+              all_notes[surah_n - 1][ayah_n - 1][note_n - 1]);
+        } else {
+          // Reference parsed but indices out of range, malformed data.
+          std::cerr << "<< Manzil: malformed note reference \"" << ayah_note
+                    << "\", showing raw text\n";
+          note_str =
+              wxString::Format("[malformed note reference: %s]", note_str);
         }
+
+      } else {
+        // sscanf failed to match all 3 fields, this is plain note text,
+        // not a cross-reference. note_str already holds the correct value.
       }
+
       html += wxString::Format(
           "<tr class=\"note-row\"><td colspan=\"2\" "
           "style=\"color:#aaa; font-size:13px; padding:6px 10px; "
           "border-bottom:1px solid #444;\">%s</td></tr>",
           note_str);
     }
-
-    ayah++;
   }
 
   html +=
