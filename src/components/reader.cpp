@@ -208,7 +208,7 @@ void Reader::OnNoteClicked(wxWebViewEvent& event) {
   }
 }
 
-void Reader::LoadSurah(uint surah_number) {
+void Reader::LoadSurah(unsigned int surah_number) {
   surah_number_ = surah_number;
   webview_->SetPage(BuildHtml(quranite_, surah_number), "");
 }
