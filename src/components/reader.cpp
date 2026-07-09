@@ -163,46 +163,48 @@ wxString Reader::BuildHtml(const Quranite& quranite,
 }
 
 void Reader::OnNoteClicked(wxWebViewEvent& event) {
+  json webview_json;
+
   try {
-    auto parsed_payload = json::parse(event.GetString().ToStdString());
-
-    if (parsed_payload.contains("ref")) {
-      std::string ref = parsed_payload["ref"].get<std::string>();
-      uint surah = 0, begin_ayah = 0, end_ayah = 0;
-      if (std::sscanf(ref.c_str(), "%u:%u-%u", &surah, &begin_ayah,
-                      &end_ayah) != 3) {
-        if (std::sscanf(ref.c_str(), "%u:%u", &surah, &begin_ayah) == 2)
-          end_ayah = begin_ayah;
-        else
-          return;
-      }
-      if (!dialog_) {
-        dialog_ =
-            new ReaderDialog(this, quranite_, surah, begin_ayah, end_ayah);
-        dialog_->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent& event) {
-          dialog_ = nullptr;
-          event.Skip();  // let the dialog actually close
-        });
-        dialog_->Show();
-      } else {
-        dialog_->Navigate(surah, begin_ayah, end_ayah);
-        dialog_->Raise();
-      }
-      return;
-    }
-
-    uint ayah = static_cast<uint>(
-        std::stoul(parsed_payload["ayah"].get<std::string>()));
-    uint note = static_cast<uint>(
-        std::stoul(parsed_payload["note"].get<std::string>()));
-    uint surah = surah_number_;
-
-    NoteClickedEvent note_event(EVT_NOTE_CLICKED, GetId(), surah, ayah, note);
-    wxPostEvent(GetParent(), note_event);
-
+    webview_json = json::parse(event.GetString().ToStdString());
   } catch (const std::exception& e) {
     std::cerr << "<< Manzil : Failed to parse note clicked payload, "
               << e.what() << "\n";
+  }
+
+  if (!webview_json.contains("ref")) {
+    return;
+  }
+
+  manzil::nav_entry entry;
+
+  std::string webview_str = webview_json["ref"].get<std::string>();
+  if (std::sscanf(webview_str.c_str(), "%u:%u-%u", &entry.surah,
+                  &entry.begin_ayah, &entry.end_ayah) == 3) {
+  }
+
+  else if (std::sscanf(webview_str.c_str(), "%u:%u", &entry.surah,
+                       &entry.begin_ayah) == 2) {
+    entry.end_ayah = entry.begin_ayah;
+  }
+
+  else {
+    std::cerr
+        << "<< Manzil: ReaderDialog::OnVerseRef webview string parse error \n";
+    return;
+  }
+
+  if (dialog_ == nullptr) {
+    dialog_ = new ReaderDialog(this, quranite_, entry);
+    dialog_->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent& event) {
+      dialog_->Destroy();
+      dialog_ = nullptr;
+      event.Skip();
+    });
+    dialog_->Show();
+  } else {
+    dialog_->Navigate(entry);
+    dialog_->Raise();
   }
 }
 
