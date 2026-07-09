@@ -62,6 +62,10 @@ class ReaderDialog : public wxDialog {
   std::vector<manzil::nav_entry> history_{
       0};  ///< contain stack of opened entry
 
+  /**
+   * @brief Build html which will be shown and set as webview page.
+   * @param entry struct entry contain surah number, begin and end ayah.
+   */
   wxString BuildHtml(manzil::nav_entry entry);
 
   /**
