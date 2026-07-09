@@ -1,12 +1,11 @@
 #include "reader.hpp"
 #include <nlohmann/json.hpp>
-#include "../events.hpp"
 #include "../types.hpp"
 #include "quranite.hpp"
 
 using json = nlohmann::json;
 
-Reader::Reader(wxWindow* parent, Quranite& quranite, uint surah_number)
+Reader::Reader(wxWindow* parent, Quranite& quranite, unsigned int surah_number)
     : wxPanel(parent, wxID_ANY),
       quranite_(quranite),
       surah_number_(surah_number) {
@@ -23,7 +22,8 @@ Reader::Reader(wxWindow* parent, Quranite& quranite, uint surah_number)
   SetSizer(sizer);
 }
 
-wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
+wxString Reader::BuildHtml(const Quranite& quranite,
+                           unsigned int surah_number) {
   wxString html =
       "<html><head><style>"
       "body { background:#282c34; color:#ffffff; "
@@ -34,98 +34,129 @@ wxString Reader::BuildHtml(const Quranite& quranite, uint surah_number) {
       ".en { direction:ltr; text-align:left; font-size:16px; width:50%; }"
       "sup { color:#4ea1ff; cursor:pointer; }"
       "a { color:#4ea1ff; cursor:pointer; }"
+      ".note-row td { color:#aaa; font-size:13px; padding:6px 10px; "
+      "border-bottom:1px solid #444; }"
+      ".note-row.hidden { display: none; }"
       "</style></head><body><table>";
 
-  manzil::verse_list verse = quranite.getVerse();
-  manzil::note_list notes = quranite.getNote();
+  const auto& surah_verses = quranite.GetVerse()[surah_number - 1];
+  const auto& all_notes = quranite.GetNote();
 
-  uint ayah = 1;
-  for (const auto& ver : verse[surah_number - 1]) {
+  unsigned int ayah = 1;
+  for (const auto& verse : surah_verses) {
+
     json notes_array = json::array();
 
-    for (size_t i = 0; i < notes[surah_number - 1][ayah - 1].size(); i++) {
-      // 1. Keep it as std::string to avoid wxString encoding issues during JSON building
-      std::string note_str = notes[surah_number - 1][ayah - 1][i];
+    const auto& ayah_notes = all_notes[surah_number - 1][ayah - 1];
+    for (const auto& ayah_note : ayah_notes) {
 
-      unsigned long a, b, c;
-      if (std::sscanf(note_str.c_str(), "%lu:%lu:%lu", &a, &b, &c) == 3) {
-        if (a > 0 && a <= notes.size() && b > 0 && b <= notes[a - 1].size() &&
-            c > 0 && c <= notes[a - 1][b - 1].size()) {
-          note_str = notes[a - 1][b - 1][c - 1];
+      // 1. Keep it as std::string to avoid
+      //    wxString encoding issues during JSON building
+      std::string note_str = ayah_note;
+
+      unsigned int surah_n;
+      unsigned int ayah_n;
+      unsigned int note_n;
+      if (std::sscanf(note_str.c_str(), "%u:%u:%u", &surah_n, &ayah_n,
+                      &note_n) == 3) {
+
+        if (surah_n > 0 &&                                        //
+            surah_n <= all_notes.size() &&                        //
+            ayah_n > 0 &&                                         //
+            ayah_n <= all_notes[surah_n - 1].size() &&            //
+            note_n > 0 &&                                         //
+            note_n <= all_notes[surah_n - 1][ayah_n - 1].size())  //
+        {
+          note_str = all_notes[surah_n - 1][ayah_n - 1][note_n - 1];
+        } else {
+          // Reference parsed but indices out of range, malformed data.
+          std::cerr << "<< Manzil: malformed note reference \"" << ayah_note
+                    << "\", showing raw text\n";
+          note_str =
+              wxString::Format("[malformed note reference: %s]", note_str);
         }
+
+      } else {
+        // sscanf failed to match all 3 fields, this is plain note text,
+        // not a cross-reference. note_str already holds the correct value.
       }
 
-      // 2. Push the raw string. nlohmann::json automatically escapes \n, ", \, etc.
+      // 2. Push the raw string.
+      //    nlohmann::json automatically escapes \n, ", \, etc.
       notes_array.push_back(note_str);
     }
 
     // 3. dump() creates perfectly valid JSON. Convert to wxString safely.
-    // (By default, dump() also escapes non-ASCII characters to \uXXXX,
-    // ensuring wxString::FromUTF8 never fails even in ANSI builds).
+    //    (By default, dump() also escapes non-ASCII characters to \uXXXX,
+    //    ensuring wxString::FromUTF8 never fails even in ANSI builds).
     wxString notes_json = wxString::FromUTF8(notes_array.dump());
 
-    // Optional but recommended: Escape single quotes so they don't break your HTML attribute
+    // Optional but recommended:
+    // Escape single quotes so they don't break your HTML attribute
     notes_json.Replace("'", "&#39;");
 
     html += wxString::Format(
         "<tr data-ayah=\"%u\" data-notes='%s'>"
         "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
-        ayah, notes_json, wxString::FromUTF8(ver.arabic),
-        wxString::FromUTF8(ver.english));
+        ayah, notes_json, wxString::FromUTF8(verse.arabic),
+        wxString::FromUTF8(verse.english));
     ayah++;
   }
 
   html +=
-      "</table>"
-      "<script>"
-      "document.querySelectorAll('sup').forEach(e => {"
-      "  e.addEventListener('click', () => {"
-      "    const row = e.closest('tr');"
-      "    const ayah = row.dataset.ayah;"
-      "    const noteIndex = parseInt(e.textContent) - 1;"
-      "    const key = ayah + '_' + noteIndex;"
+      "</table><script>"
       ""
-      "    const openNotes = JSON.parse(row.dataset.openNotes || '{}');"
-      "    const isOpen = openNotes[key] !== undefined;"
+      "// 1. INITIALIZE: Parse JSON and insert all note rows into the DOM "
+      "immediately\n"
       ""
-      "    if (isOpen) {"
-      "      delete openNotes[key];"
-      "    } else {"
-      "      const notes = JSON.parse(row.dataset.notes);"
-      "      openNotes[key] = { index: noteIndex, ayah: ayah, text: "
-      "notes[noteIndex] };"
-      "    }"
-      "    row.dataset.openNotes = JSON.stringify(openNotes);"
+      "document.querySelectorAll('tr[data-notes]').forEach(row => {\n"
+      "  const notes = JSON.parse(row.dataset.notes || '[]');\n"
+      "  const ayah = row.dataset.ayah;\n"
+      "  \n"
+      "  // Map each note text into its own table row markup\n"
+      "  const notesHtml = notes.map((text, index) => `\n"
+      "    <tr class='note-row hidden' data-ayah='${ayah}' "
+      "data-index='${index}'>\n"
+      "      <td colspan='2'>${text}</td>\n"
+      "    </tr>\n"
+      "  `).join('');\n"
+      "  \n"
+      "  // Inject the notes directly underneath this verse row\n"
+      "  row.insertAdjacentHTML('afterend', notesHtml);\n"
+      "});\n"
+      "\n"
       ""
-      "    window.manzil.postMessage(JSON.stringify({"
-      "      ayah: ayah,"
-      "      note: e.textContent,"
-      "      action: isOpen ? 'close' : 'open'"
-      "    }));"
+      "// 2. TOGGLE: Show or hide individual notes when clicking their 'sup' "
+      "tags\n"
       ""
-      "    while (row.nextElementSibling?.classList.contains('note-row')) {"
-      "      row.nextElementSibling.remove();"
-      "    }"
+      "document.querySelectorAll('sup').forEach(sup => {\n"
+      "  sup.addEventListener('click', () => {\n"
+      "    const row = sup.closest('tr');\n"
+      "    const ayah = row.dataset.ayah;\n"
+      "    const index = parseInt(sup.textContent) - 1; // '1' becomes index "
+      "0\n"
+      "    \n"
+      "    // Target the specific note row using data attributes\n"
+      "    const noteRow = "
+      "document.querySelector(`tr.note-row[data-ayah='${ayah}'][data-index='${"
+      "index}']`);\n"
+      "    if (noteRow) {\n"
+      "      noteRow.classList.toggle('hidden');\n"
+      "    }\n"
+      "  });\n"
+      "});\n"
+      "\n"
       ""
-      "    const notesHtml = Object.values(openNotes)"
-      "      .sort((a, b) => a.index - b.index)"
-      "      .map(n => '<tr class=\"note-row\"><td colspan=\"2\" "
-      "style=\"color:#aaa; font-size:13px; padding:6px 10px; border-bottom:1px "
-      "solid #444;\">' + n.text + '</td></tr>')"
-      "      .join('');"
+      "// 3. CROSS-REFERENCES: Intercept clicks on links inside notes\n"
       ""
-      "    row.insertAdjacentHTML('afterend', notesHtml);"
-      "  });"
-      "});"
-      "document.addEventListener('click', e => {"
-      "  const a = e.target.closest('a');"
-      "  if (a && a.closest('.note-row')) {"
-      "    e.preventDefault();"
-      "    window.manzil.postMessage(JSON.stringify({"
-      "      ref: a.textContent.trim()"
-      "    }));"
-      "  }"
-      "});"
+      "document.addEventListener('click', e => {\n"
+      "  const a = e.target.closest('a');\n"
+      "  if (a && a.closest('.note-row')) {\n"
+      "    e.preventDefault();\n"
+      "    window.manzil.postMessage(JSON.stringify({ ref: "
+      "a.textContent.trim() }));\n"
+      "  }\n"
+      "});\n"
       "</script></body></html>";
 
   return html;
