@@ -28,7 +28,6 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   SetSizer(sizer);
 
   Navigate(entry);
-  Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent& event) { Destroy(); });
 }
 
 void ReaderDialog::Navigate(manzil::nav_entry entry) {
