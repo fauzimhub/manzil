@@ -68,10 +68,11 @@ void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
   manzil::nav_entry entry;
 
   std::string webview_str = webview_json["ref"].get<std::string>();
+  // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)
   if (std::sscanf(webview_str.c_str(), "%u:%u-%u", &entry.surah,
                   &entry.begin_ayah, &entry.end_ayah) == 3) {
   }
-
+  // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)
   else if (std::sscanf(webview_str.c_str(), "%u:%u", &entry.surah,
                        &entry.begin_ayah) == 2) {
     entry.end_ayah = entry.begin_ayah;
@@ -120,6 +121,7 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
       unsigned int surah_n;
       unsigned int ayah_n;
       unsigned int note_n;
+      // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)
       if (std::sscanf(note_str.c_str(), "%u:%u:%u", &surah_n, &ayah_n,
                       &note_n) == 3) {
 
