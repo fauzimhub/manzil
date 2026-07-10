@@ -119,7 +119,12 @@ void SurahCard::OnLeave(wxMouseEvent& event) {
 }
 
 void SurahCard::OnLeftUp(wxMouseEvent& event) {
-  (void)event;
+  const wxPoint pos = event.GetPosition();
+  // if at release, the cursor's position
+  // not within this card rect, then return
+  if (!GetClientRect().Contains(pos)) {
+    return;
+  }
   wxCommandEvent evt(EVT_SURAH_SELECTED);
   evt.SetInt((wxAtoi(number_)));
   wxPostEvent(wxGetTopLevelParent(this), evt);
