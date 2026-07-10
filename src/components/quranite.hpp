@@ -44,7 +44,7 @@ class Quranite {
       note_{};  ///< Footnotes, indexed by surah then ayah then note number.
 
  public:
-  explicit Quranite(manzil::quranite_data_paths& paths);
+  explicit Quranite(const manzil::quranite_data_paths& paths);
 
   [[nodiscard]] const manzil::surahs_by_number& GetSurah() const {
     return surah_;

@@ -17,7 +17,7 @@ using std::cerr;
 //       ayah counts per surah, correct surah ordering, cross-file
 //       consistency between verses_count and actual verse entries) is
 //       not validated and is assumed correct from the source files.
-Quranite::Quranite(manzil::quranite_data_paths& paths) {
+Quranite::Quranite(const manzil::quranite_data_paths& paths) {
 
   json parsed_surah{};
   json parsed_ar{};
