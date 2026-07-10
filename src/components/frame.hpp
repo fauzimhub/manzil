@@ -30,6 +30,7 @@ class Frame : public wxFrame {
  private:
   static constexpr int k_min_width = 400;
   static constexpr int k_min_height = 300;
+  static constexpr int k_grid_col_divisor = 250;
 
   unsigned int surah_number_ =
       1;  ///< Currently displayed surah number (1-114).
@@ -39,6 +40,7 @@ class Frame : public wxFrame {
       nullptr;  ///< Active reader panel; null until a surah is opened.
   wxScrolledWindow* surah_list_ =
       nullptr;  ///< Scrollable list of SurahCard panels shown on launch.
+  wxGridSizer* grid_ = nullptr;
 
   /**
     * @brief Handle the Quit menu action. 
@@ -73,6 +75,15 @@ class Frame : public wxFrame {
     * @param event The key press event.
  */
   void OnKeyDown(wxKeyEvent& event);
+
+  /**
+    * @brief Handle changing grid col when window size change.
+    *
+    * Col growth decided by k_grid_col_divisor  
+    *
+    * @param event The size event.
+ */
+  void OnSize(wxSizeEvent& event);
 
  public:
   /**

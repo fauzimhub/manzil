@@ -49,17 +49,17 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
 
   surah_list_ = new wxScrolledWindow(this);
 
-  auto* grid = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
+  grid_ = new wxGridSizer(grid_cols, grid_hgap, grid_vgap);
   for (const auto& sur : quranite_.GetSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
                                sur.name_transliteration, sur.name_translation,
                                wxString::Format("%d", sur.verses_count));
 
-    grid->Add(card, 0, wxEXPAND | wxALL, grid_padding);
+    grid_->Add(card, 0, wxEXPAND | wxALL, grid_padding);
   }
 
-  surah_list_->SetSizer(grid);
+  surah_list_->SetSizer(grid_);
   surah_list_->FitInside();
   surah_list_->SetScrollRate(0, panel_ystep);
 
@@ -73,6 +73,7 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   Bind(wxEVT_MENU, &Frame::OnQuit, this, wxID_EXIT);
   Bind(EVT_SURAH_SELECTED, &Frame::OnSurahSelected, this);
   Bind(wxEVT_CHAR_HOOK, &Frame::OnKeyDown, this);
+  Bind(wxEVT_SIZE, &Frame::OnSize, this);
 }
 
 void Frame::OnAbout(wxCommandEvent& event) {
@@ -110,5 +111,16 @@ void Frame::OnKeyDown(wxKeyEvent& event) {
     Layout();
   } else {
     event.Skip();
+  }
+}
+
+void Frame::OnSize(wxSizeEvent& event) {
+  event.Skip();
+  int cols = static_cast<int>(
+      std::trunc(GetClientSize().GetWidth() / k_grid_col_divisor));
+  if (cols != grid_->GetCols()) {
+    grid_->SetCols(cols);
+    surah_list_->FitInside();
+    surah_list_->Layout();
   }
 }
