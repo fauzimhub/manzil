@@ -53,7 +53,8 @@ Frame::Frame(const wxString& title, int min_width, int min_height)
   for (const auto& sur : quranite_.GetSurah()) {
     auto* card = new SurahCard(surah_list_, wxString::Format("%d", sur.number),
                                wxString::FromUTF8(sur.name_arabic),
-                               sur.name_transliteration, sur.name_translation,
+                               sur.name_transliteration,
+                               wxString::FromUTF8(sur.name_translation),
                                wxString::Format("%d", sur.verses_count));
 
     grid_->Add(card, 0, wxEXPAND | wxALL, grid_padding);
