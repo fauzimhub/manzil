@@ -39,15 +39,28 @@ wxString Reader::BuildHtml(const Quranite& quranite,
       ".note-row.hidden { display: none; }"
       "</style></head><body><table>";
 
-  const auto& surah_verses = quranite.GetVerse()[surah_number - 1];
+  auto surah_verses = quranite.GetVerse()[surah_number - 1];
   const auto& all_notes = quranite.GetNote();
+
+  constexpr int fatihah_number = 1;
+  constexpr int taubah_number = 9;
+  const bool need_bismillah =
+      (surah_number != fatihah_number && surah_number != taubah_number);
+
+  if (need_bismillah) {
+    surah_verses.insert(surah_verses.begin(), quranite.GetVerse()[0][0]);
+  }
 
   unsigned int ayah = 1;
   for (const auto& verse : surah_verses) {
 
     json notes_array = json::array();
 
-    const auto& ayah_notes = all_notes[surah_number - 1][ayah - 1];
+    unsigned int real_ayah_index = need_bismillah ? ayah - 2 : ayah - 1;
+    auto ayah_notes = (need_bismillah && ayah == 1)
+                          ? all_notes[0][0]
+                          : all_notes[surah_number - 1][real_ayah_index];
+
     for (const auto& ayah_note : ayah_notes) {
 
       // 1. Keep it as std::string to avoid
