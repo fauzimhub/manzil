@@ -3,6 +3,12 @@
 #include "../events.hpp"
 #include "surah_card.hpp"
 
+// TODO: This class is honestly a mess, like why std::move ?,
+//       wxString for param is a good idea so it make
+//       this class flexible, but just raw dogging it without putting
+//       in a struct is questionable decision.
+//       also check HeaderCard it also have the same problem
+//       because that class basically derived from this class
 SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
                      wxString transliteration, wxString translation,
                      wxString verses)
