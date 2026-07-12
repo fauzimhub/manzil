@@ -90,15 +90,28 @@ void Frame::OnQuit(wxCommandEvent& event) {
 
 void Frame::OnSurahSelected(wxCommandEvent& event) {
   surah_number_ = static_cast<unsigned int>(event.GetInt());
+  const auto surah_data = quranite_.GetSurah()[surah_number_ - 1];
 
   if (reader_ == nullptr) {
+    header_card_ = HeaderCard::MakeReaderMode(
+        this, wxString::Format("%d", surah_number_),
+        wxString::FromUTF8(surah_data.name_arabic),
+        surah_data.name_transliteration,
+        wxString::FromUTF8(surah_data.name_translation));
+
     reader_ = new Reader(this, quranite_, surah_number_);
+    GetSizer()->Add(header_card_, 1, wxEXPAND);
     GetSizer()->Add(reader_, 1, wxEXPAND);
   } else {
     reader_->LoadSurah(surah_number_);
+    header_card_->SetData(wxString::Format("%d", surah_number_),
+                          wxString::FromUTF8(surah_data.name_arabic),
+                          surah_data.name_transliteration,
+                          wxString::FromUTF8(surah_data.name_translation));
   }
 
   surah_list_->Hide();
+  header_card_->Show();
   reader_->Show();
   Layout();
   reader_->SetFocus();
@@ -107,6 +120,7 @@ void Frame::OnSurahSelected(wxCommandEvent& event) {
 void Frame::OnKeyDown(wxKeyEvent& event) {
   if (event.GetKeyCode() == WXK_ESCAPE && reader_ != nullptr &&
       reader_->IsShown()) {
+    header_card_->Hide();
     reader_->Hide();
     surah_list_->Show();
     Layout();

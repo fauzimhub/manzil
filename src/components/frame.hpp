@@ -36,6 +36,8 @@ class Frame : public wxFrame {
       1;  ///< Currently displayed surah number (1-114).
   Quranite quranite_;
 
+  HeaderCard* header_card_ =
+      nullptr;  ///< Active header above reader panel; null until a surah is opened.
   Reader* reader_ =
       nullptr;  ///< Active reader panel; null until a surah is opened.
   wxScrolledWindow* surah_list_ =
