@@ -57,7 +57,6 @@ class Reader : public wxPanel {
   wxWebView* webview_ = nullptr;
   ReaderDialog* dialog_ = nullptr;
   Quranite& quranite_;
-  unsigned int surah_number_;
 
   /**
    * @brief Create ReaderDialog pop-up showing verses with notes.
@@ -71,7 +70,9 @@ class Reader : public wxPanel {
    * @param quranite.
    * @param surah_number current surah number should start at 1.
    */
-  static wxString BuildHtml(const Quranite& quranite,
-                            unsigned int surah_number);
+  static wxString BuildHtml(const manzil::surah_verses& surah_verses,
+                            manzil::notes_by_surah all_notes,
+                            const manzil::surah& surah_data,
+                            bool need_bismillah);
 };
 #endif  // READER_HPP

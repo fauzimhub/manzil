@@ -6,41 +6,17 @@
 using json = nlohmann::json;
 
 Reader::Reader(wxWindow* parent, Quranite& quranite, unsigned int surah_number)
-    : wxPanel(parent, wxID_ANY),
-      quranite_(quranite),
-      surah_number_(surah_number) {
+    : wxPanel(parent, wxID_ANY), quranite_(quranite) {
+
   webview_ = wxWebView::New(this, wxID_ANY);
 
   webview_->AddScriptMessageHandler("manzil");
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED, &Reader::OnNoteClicked,
                  this);
 
-  webview_->SetPage(BuildHtml(quranite, surah_number), "");
-
-  auto* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(webview_, 1, wxEXPAND);
-  SetSizer(sizer);
-}
-
-wxString Reader::BuildHtml(const Quranite& quranite,
-                           unsigned int surah_number) {
-  wxString html =
-      "<html><head><style>"
-      "body { background:#282c34; color:#ffffff; "
-      "font-family: 'Noto Naskh Arabic'; }"
-      "table { width:100%; max-width:900px; margin:0 auto; }"
-      "td { vertical-align:top; padding:10px;}"
-      ".ar { direction:rtl; text-align:right; font-size:24px; width:50%; }"
-      ".en { direction:ltr; text-align:left; font-size:16px; width:50%; }"
-      "sup { color:#4ea1ff; cursor:pointer; }"
-      "a { color:#4ea1ff; cursor:pointer; }"
-      ".note-row td { color:#aaa; font-size:13px; padding:6px 10px; "
-      "border-bottom:1px solid #444; }"
-      ".note-row.hidden { display: none; }"
-      "</style></head><body><table>";
-
   auto surah_verses = quranite.GetVerse()[surah_number - 1];
   const auto& all_notes = quranite.GetNote();
+  const auto surah_data = quranite.GetSurah()[surah_number - 1];
 
   constexpr int fatihah_number = 1;
   constexpr int taubah_number = 9;
@@ -51,6 +27,38 @@ wxString Reader::BuildHtml(const Quranite& quranite,
     surah_verses.insert(surah_verses.begin(), quranite.GetVerse()[0][0]);
   }
 
+  webview_->SetPage(
+      BuildHtml(surah_verses, all_notes, surah_data, need_bismillah), "");
+
+  auto* sizer = new wxBoxSizer(wxVERTICAL);
+  sizer->Add(webview_, 1, wxEXPAND);
+  SetSizer(sizer);
+}
+
+wxString Reader::BuildHtml(const manzil::surah_verses& surah_verses,
+                           manzil::notes_by_surah all_notes,
+                           const manzil::surah& surah_data,
+                           bool need_bismillah) {
+  wxString html =
+      "<html><head><style>"
+      "body { background:#282c34; color:#ffffff; "
+      "font-family: 'Noto Naskh Arabic'; }"
+      "table { width:100%; max-width:900px; margin:0 auto; }"
+      "td { vertical-align:top; padding:10px;}"
+      ".ar { direction:rtl; text-align:right; "
+      "font-size:24px; width:48%; }"
+      ".num { vertical-align:middle; text-align:center; font-size:16px; "
+      "width:4%; color:#4a4f5c; "
+      "}"
+      ".en { direction:ltr; text-align:left; "
+      "font-size:16px; width:48%; }"
+      "sup { color:#4ea1ff; cursor:pointer; }"
+      "a { color:#4ea1ff; cursor:pointer; }"
+      ".note-row td { color:#aaa; font-size:13px; padding:6px 10px; "
+      "border-bottom:1px solid #444; }"
+      ".note-row.hidden { display: none; }"
+      "</style></head><body><table>";
+
   unsigned int ayah = 1;
   for (const auto& verse : surah_verses) {
 
@@ -59,7 +67,7 @@ wxString Reader::BuildHtml(const Quranite& quranite,
     unsigned int real_ayah_index = need_bismillah ? ayah - 2 : ayah - 1;
     auto ayah_notes = (need_bismillah && ayah == 1)
                           ? all_notes[0][0]
-                          : all_notes[surah_number - 1][real_ayah_index];
+                          : all_notes[surah_data.number - 1][real_ayah_index];
 
     for (const auto& ayah_note : ayah_notes) {
 
@@ -109,10 +117,21 @@ wxString Reader::BuildHtml(const Quranite& quranite,
     // Escape single quotes so they don't break your HTML attribute
     notes_json.Replace("'", "&#39;");
 
+    const bool is_bismillah_row = (need_bismillah && ayah == 1);
+    wxString ayah_number_display;
+    if (is_bismillah_row) {
+      ayah_number_display = wxString("");
+    } else {
+      ayah_number_display =
+          wxString::Format("%u", need_bismillah ? ayah - 1 : ayah);
+    }
+
     html += wxString::Format(
         "<tr data-ayah=\"%u\" data-notes='%s'>"
-        "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
-        ayah, notes_json, wxString::FromUTF8(verse.arabic),
+        "<td class=\"ar\">%s</td>"
+        "<td class=\"num\">%s</td>"
+        "<td class=\"en\">%s</td></tr>",
+        ayah, notes_json, wxString::FromUTF8(verse.arabic), ayah_number_display,
         wxString::FromUTF8(verse.english));
     ayah++;
   }
@@ -131,7 +150,7 @@ wxString Reader::BuildHtml(const Quranite& quranite,
       "  const notesHtml = notes.map((text, index) => `\n"
       "    <tr class='note-row hidden' data-ayah='${ayah}' "
       "data-index='${index}'>\n"
-      "      <td colspan='2'>${text}</td>\n"
+      "      <td colspan='3'>${text}</td>\n"
       "    </tr>\n"
       "  `).join('');\n"
       "  \n"
@@ -218,12 +237,25 @@ void Reader::OnNoteClicked(wxWebViewEvent& event) {
     });
     dialog_->Show();
   } else {
-    dialog_->Navigate(entry);
+    dialog_->Navigate(entry, quranite_);
     dialog_->Raise();
   }
 }
 
 void Reader::LoadSurah(unsigned int surah_number) {
-  surah_number_ = surah_number;
-  webview_->SetPage(BuildHtml(quranite_, surah_number), "");
+  auto surah_verses = quranite_.GetVerse()[surah_number - 1];
+  const auto& all_notes = quranite_.GetNote();
+  const auto surah_data = quranite_.GetSurah()[surah_number - 1];
+
+  constexpr int fatihah_number = 1;
+  constexpr int taubah_number = 9;
+  const bool need_bismillah =
+      (surah_number != fatihah_number && surah_number != taubah_number);
+
+  if (need_bismillah) {
+    surah_verses.insert(surah_verses.begin(), quranite_.GetVerse()[0][0]);
+  }
+
+  webview_->SetPage(
+      BuildHtml(surah_verses, all_notes, surah_data, need_bismillah), "");
 }
