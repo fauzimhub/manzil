@@ -44,6 +44,7 @@ add_executable(
   src/components/frame.cpp
   src/components/about_dialog.cpp
   src/components/surah_card.cpp
+  src/components/header_card.cpp
   src/components/reader.cpp
   src/components/reader_dialog.cpp
   src/events.cpp)
