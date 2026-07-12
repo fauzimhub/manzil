@@ -94,8 +94,10 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
       "font-family: 'Noto Naskh Arabic'; }"
       "table { width:100%; max-width:900px; margin:0 auto; }"
       "td { vertical-align:top; padding:10px; }"
-      ".ar { direction:rtl; text-align:right; font-size:24px; width:50%; }"
-      ".en { direction:ltr; text-align:left; font-size:16px; width:50%; }"
+      ".ar { direction:rtl; text-align:right; font-size:24px; width:48%; }"
+      ".num { vertical-align:middle; text-align:center; font-size:16px; "
+      "width:4%; color:#4a4f5c; }"
+      ".en { direction:ltr; text-align:left; font-size:16px; width:48%; }"
       "sup { color:#4ea1ff; cursor:pointer; }"
       "a { color:#4ea1ff; cursor:pointer; }"
       ".note-row td { color:#aaa; font-size:13px; padding:6px 10px; "
@@ -153,11 +155,15 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
 
     notes_json.Replace("'", "&#39;");
 
+    wxString ayah_number_display = wxString::Format("%u", ayah_idx + 1);
+
     html += wxString::Format(
         "<tr data-ayah=\"%u\" data-notes='%s'>"
-        "<td class=\"ar\">%s</td><td class=\"en\">%s</td></tr>",
+        "<td class=\"ar\">%s</td>"
+        "<td class=\"num\">%s</td>"
+        "<td class=\"en\">%s</td></tr>",
         ayah_idx + 1, notes_json, wxString::FromUTF8(verse.arabic),
-        wxString::FromUTF8(verse.english));
+        ayah_number_display, wxString::FromUTF8(verse.english));
   }
 
   html +=
@@ -174,7 +180,7 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
       "  const notesHtml = notes.map((text, index) => `\n"
       "    <tr class='note-row hidden' data-ayah='${ayah}' "
       "data-index='${index}'>\n"
-      "      <td colspan='2'>${text}</td>\n"
+      "      <td colspan='3'>${text}</td>\n"
       "    </tr>\n"
       "  `).join('');\n"
       "  \n"
