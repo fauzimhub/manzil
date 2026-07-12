@@ -23,6 +23,7 @@ Copyright (c) 2026 Maher Fauzi
 #include <wx/wx.h>
 #include <vector>
 #include "../types.hpp"
+#include "header_card.hpp"
 #include "quranite.hpp"
 
 /**
@@ -50,13 +51,14 @@ class ReaderDialog : public wxDialog {
    * @brief Add entry to pop-up stack.
    * @param entry struct entry contain surah number, begin and end ayah.
    */
-  void Navigate(manzil::nav_entry entry);
+  void Navigate(manzil::nav_entry entry, const Quranite& quranite);
 
   ReaderDialog(const ReaderDialog&) = delete;
   ReaderDialog& operator=(const ReaderDialog&) = delete;
 
  private:
   Quranite& quranite_;
+  HeaderCard* header_card_ = nullptr;
   wxWebView* webview_ = nullptr;
   wxButton* back_btn_ = nullptr;
   std::vector<manzil::nav_entry> history_{

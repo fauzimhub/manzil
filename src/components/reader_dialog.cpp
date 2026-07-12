@@ -2,6 +2,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "../types.hpp"
+#include "header_card.hpp"
 
 using json = nlohmann::json;
 
@@ -15,6 +16,24 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   back_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnBack, this);
   back_btn_->Hide();
 
+  const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
+
+  if (entry.begin_ayah != entry.end_ayah) {
+    header_card_ = HeaderCard::MakeDialogMode(
+        this, wxString::Format("%d", entry.surah),
+        wxString::Format("%d-%d", entry.begin_ayah, entry.end_ayah),
+        wxString::FromUTF8(surah_data.name_arabic),
+        surah_data.name_transliteration,
+        wxString::FromUTF8(surah_data.name_translation));
+  } else {
+    header_card_ = HeaderCard::MakeDialogMode(
+        this, wxString::Format("%d", entry.surah),
+        wxString::Format("%d", entry.begin_ayah),
+        wxString::FromUTF8(surah_data.name_arabic),
+        surah_data.name_transliteration,
+        wxString::FromUTF8(surah_data.name_translation));
+  }
+
   webview_ = wxWebView::New(this, wxID_ANY);
   webview_->AddScriptMessageHandler("manzil");
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED,
@@ -24,15 +43,32 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
 
   auto* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(back_btn_, 0, wxALL, back_btn_border);
+  sizer->Add(header_card_, 1, wxEXPAND);
   sizer->Add(webview_, 1, wxEXPAND);
   SetSizer(sizer);
 
-  Navigate(entry);
+  Navigate(entry, quranite_);
 }
 
-void ReaderDialog::Navigate(manzil::nav_entry entry) {
+void ReaderDialog::Navigate(manzil::nav_entry entry, const Quranite& quranite) {
+  const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
   history_.push_back(entry);
   back_btn_->Show(history_.size() > 1);
+
+  if (entry.begin_ayah != entry.end_ayah) {
+    header_card_->SetData(
+        wxString::Format("%d", entry.surah),
+        wxString::FromUTF8(surah_data.name_arabic),
+        surah_data.name_transliteration,
+        wxString::FromUTF8(surah_data.name_translation),
+        wxString::Format("%d-%d", entry.begin_ayah, entry.end_ayah));
+  } else {
+    header_card_->SetData(wxString::Format("%d", entry.surah),
+                          wxString::FromUTF8(surah_data.name_arabic),
+                          surah_data.name_transliteration,
+                          wxString::FromUTF8(surah_data.name_translation),
+                          wxString::Format("%d", entry.begin_ayah));
+  }
   Layout();
   webview_->SetPage(BuildHtml(entry), "");
 }
@@ -49,7 +85,7 @@ void ReaderDialog::OnBack(wxCommandEvent& event) {
   history_.pop_back();
   const auto& prev = history_.back();
   history_.pop_back();
-  Navigate(prev);
+  Navigate(prev, quranite_);
 }
 
 void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
@@ -84,7 +120,7 @@ void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
     return;
   }
 
-  Navigate(entry);
+  Navigate(entry, quranite_);
 }
 
 wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
