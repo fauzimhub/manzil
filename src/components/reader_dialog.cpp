@@ -138,7 +138,7 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
       "a { color:#4ea1ff; cursor:pointer; }"
       ".note-row td { color:#aaa; font-size:13px; padding:6px 10px; "
       "border-bottom:1px solid #444; }"
-      ".note-row.hidden { display: note-row; }"
+      ".note-row.hidden { display: none; }"
       "</style></head><body><table>";
 
   const auto& surah_verses = quranite_.GetVerse()[entry.surah - 1];
@@ -214,7 +214,7 @@ wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
       "  \n"
       "  // Map each note text into its own table row markup\n"
       "  const notesHtml = notes.map((text, index) => `\n"
-      "    <tr class='note-row hidden' data-ayah='${ayah}' "
+      "    <tr class='note-row' data-ayah='${ayah}' "
       "data-index='${index}'>\n"
       "      <td colspan='3'>${text}</td>\n"
       "    </tr>\n"
