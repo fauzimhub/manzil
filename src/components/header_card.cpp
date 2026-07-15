@@ -3,7 +3,8 @@
 HeaderCard::HeaderCard(wxWindow* parent, wxString number, wxString ayah,
                        wxString arabic, wxString transliteration,
                        wxString translation, header_mode mode)
-    : wxPanel(parent, wxID_ANY),
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+              wxFULL_REPAINT_ON_RESIZE),
       number_(std::move(number)),
       ayah_(std::move(ayah)),
       arabic_(std::move(arabic)),
