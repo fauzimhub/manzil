@@ -31,7 +31,11 @@ set(JSON_BuildTests OFF)
 
 set(wxUSE_EXPAT builtin CACHE STRING "" FORCE)
 set(wxUSE_WEBVIEW ON)
-set(wxUSE_WEBVIEW_WEBKIT ON)
+if(NOT WIN32)
+  set(wxUSE_WEBVIEW_WEBKIT ON)
+endif()
+
+add_compile_options(-Wno-error=date-time)
 
 add_subdirectory(third_party/wxwidgets)
 add_subdirectory(third_party/json)
@@ -48,6 +52,11 @@ add_executable(
   src/components/reader.cpp
   src/components/reader_dialog.cpp
   src/events.cpp)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  enable_language(RC)
+  target_sources(${EXECUTABLE_NAME} PRIVATE src/manzil.rc)
+endif()
 
 target_include_directories(
   ${EXECUTABLE_NAME}
@@ -66,11 +75,17 @@ target_compile_options(
   ${EXECUTABLE_NAME}
   PRIVATE
     $<$<CONFIG:Debug>:-g -pedantic -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wno-enum-enum-conversion>
-    $<$<CONFIG:Release>:-Os -flto=auto -fvisibility=hidden -fno-ident -DNDEBUG -ffunction-sections -fdata-sections>)
+    $<$<CONFIG:Release>:-Os -fvisibility=hidden -fno-ident -DNDEBUG -ffunction-sections -fdata-sections>
+    $<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:GNU>>:-flto=auto>
+    $<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:${CMAKE_SYSTEM_NAME},Windows>>>:-flto=thin>)
 
 target_link_options(
   ${EXECUTABLE_NAME}
-  PRIVATE $<$<CONFIG:Release>:-s -flto=auto -Wl,--gc-sections>)
+  PRIVATE
+    $<$<CONFIG:Release>:-s -Wl,--gc-sections>
+    $<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:GNU>>:-flto=auto>
+    $<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:${CMAKE_SYSTEM_NAME},Windows>>>:-flto=thin>
+    $<$<STREQUAL:${CMAKE_SYSTEM_NAME},Windows>:-Wl,--subsystem,windows>)
 
 target_compile_definitions(
   ${EXECUTABLE_NAME}
