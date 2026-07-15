@@ -12,7 +12,8 @@
 SurahCard::SurahCard(wxWindow* parent, wxString number, wxString arabic,
                      wxString transliteration, wxString translation,
                      wxString verses)
-    : wxPanel(parent, wxID_ANY),
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+              wxFULL_REPAINT_ON_RESIZE),
       number_(std::move(number)),
       arabic_(std::move(arabic)),
       transliteration_(std::move(transliteration)),
