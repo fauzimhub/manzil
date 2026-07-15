@@ -4,6 +4,12 @@
 #include "components/frame.hpp"
 #include "manzil.hpp"
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <climits>
+#endif
+
 using string = std::string;
 using std::cerr;
 using std::exception;
@@ -38,23 +44,29 @@ bool manzil::App::OnInit() {
 
 namespace manzil {
 
-// TODO: only supports Linux via /proc/self/exe;
-//       look up Windows (GetModuleFileName)
-//       for cross-platform support.
-//       forget mac os, i am too poor to have apple device
 path GetExecutableDir() {
-  string proc_self_exe = "/proc/self/exe";
-
+#ifdef _WIN32
+  wchar_t buffer[MAX_PATH];
+  DWORD len = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
+  if (len == 0 || len == MAX_PATH) {
+    cerr << "<< Manzil : Failed to get module file name (GetLastError="
+         << GetLastError() << ")\n";
+    return ".";
+  }
+  return path(buffer).parent_path();
+#else
+  const string proc_self_exe = "/proc/self/exe";
   try {
 
     path exe_path = read_symlink(proc_self_exe);
     return exe_path.parent_path();
 
   } catch (const exception& e) {
-    std::cerr << "<< Manzil : Failed to read symlink " << proc_self_exe << "\n"
-              << e.what() << "\n";
+    cerr << "<< Manzil : Failed to read symlink " << proc_self_exe << "\n"
+         << e.what() << "\n";
     return ".";
   }
+#endif
 }
 
 // TODO: rather than runtime_error
