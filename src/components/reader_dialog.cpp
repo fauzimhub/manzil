@@ -34,7 +34,13 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
         wxString::FromUTF8(surah_data.name_translation));
   }
 
+#ifdef _WIN32
+  webview_ = wxWebView::New(this, wxID_ANY, "", wxDefaultPosition,
+                            wxDefaultSize, wxWebViewBackendEdge);
+#else
   webview_ = wxWebView::New(this, wxID_ANY);
+#endif
+
   webview_->AddScriptMessageHandler("manzil");
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED,
                  &ReaderDialog::OnVerseRef, this);

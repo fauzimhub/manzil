@@ -8,7 +8,12 @@ using json = nlohmann::json;
 Reader::Reader(wxWindow* parent, Quranite& quranite, unsigned int surah_number)
     : wxPanel(parent, wxID_ANY), quranite_(quranite) {
 
+#ifdef _WIN32
+  webview_ = wxWebView::New(this, wxID_ANY, "", wxDefaultPosition,
+                            wxDefaultSize, wxWebViewBackendEdge);
+#else
   webview_ = wxWebView::New(this, wxID_ANY);
+#endif
 
   webview_->AddScriptMessageHandler("manzil");
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED, &Reader::OnNoteClicked,
