@@ -22,24 +22,4 @@ Copyright (c) 2026 Maher Fauzi
 #include <wx/wx.h>
 #include "manzil.hpp"
 
-int main(int argc, char** argv) {
-
-  /*
-   * on linux without setting disabling dmabuf renderer got: 
-   * error 71(Protocol error) dispatching to Wayland
-   * a.k.a black screen the exit on wxwidgets web view.
-   * havent quite found the reason yet, 
-   * something with nvidia maybe ?  
-   * trying GSK_RENDERER=gl, GSK_RENDERER=ngl change nothing.
-   * using GDK_BACKEND=x11 on wayland got me different error:  
-   * Failed to create GBM buffer of size 400x273: Invalid argument
-   * what a mess...
-   */
-#ifdef _WIN32
-#else
-  setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", 1);
-#endif
-
-  wxApp::SetInstance(new manzil::App());
-  return wxEntry(argc, argv);
-}
+wxIMPLEMENT_APP(manzil::App);

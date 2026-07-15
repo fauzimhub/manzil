@@ -10,6 +10,23 @@ using std::exception;
 using std::filesystem::read_symlink;
 
 bool manzil::App::OnInit() {
+
+  /*
+   * on linux without setting disabling dmabuf renderer got: 
+   * error 71(Protocol error) dispatching to Wayland
+   * a.k.a black screen the exit on wxwidgets web view.
+   * havent quite found the reason yet, 
+   * something with nvidia maybe ?  
+   * trying GSK_RENDERER=gl, GSK_RENDERER=ngl change nothing.
+   * using GDK_BACKEND=x11 on wayland got me different error:  
+   * Failed to create GBM buffer of size 400x273: Invalid argument
+   * what a mess...
+   */
+#ifdef _WIN32
+#else
+  setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", 1);
+#endif
+
   string title = "Manzil";
 
   auto* frame = new Frame(title);
