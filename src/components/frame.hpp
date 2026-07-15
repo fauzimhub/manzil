@@ -98,6 +98,7 @@ class Frame : public wxFrame {
                  int min_height = k_min_height);
   Frame(const Frame&) = delete;
   Frame& operator=(const Frame&) = delete;
+  void GoBackToList();
 };
 
 #endif  // FRAME_HPP

@@ -117,13 +117,18 @@ void Frame::OnSurahSelected(wxCommandEvent& event) {
   reader_->SetFocus();
 }
 
-void Frame::OnKeyDown(wxKeyEvent& event) {
-  if (event.GetKeyCode() == WXK_ESCAPE && reader_ != nullptr &&
-      reader_->IsShown()) {
+void Frame::GoBackToList() {
+  if (reader_ != nullptr && reader_->IsShown()) {
     header_card_->Hide();
     reader_->Hide();
     surah_list_->Show();
     Layout();
+  }
+}
+
+void Frame::OnKeyDown(wxKeyEvent& event) {
+  if (event.GetKeyCode() == WXK_ESCAPE) {
+    GoBackToList();
   } else {
     event.Skip();
   }

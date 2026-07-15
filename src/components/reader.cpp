@@ -1,6 +1,7 @@
 #include "reader.hpp"
 #include <nlohmann/json.hpp>
 #include "../types.hpp"
+#include "frame.hpp"
 #include "quranite.hpp"
 
 using json = nlohmann::json;
@@ -200,6 +201,12 @@ wxString Reader::BuildHtml(const manzil::surah_verses& surah_verses,
       "a.textContent.trim() }));\n"
       "  }\n"
       "});\n"
+      "// 4. ESCAPE KEY: forward to C++ to exit reader\n"
+      "document.addEventListener('keydown', e => {\n"
+      "  if (e.key === 'Escape') {\n"
+      "    window.manzil.postMessage(JSON.stringify({ esc: true }));\n"
+      "  }\n"
+      "});\n"
       "</script></body></html>";
 
   return html;
@@ -213,6 +220,14 @@ void Reader::OnNoteClicked(wxWebViewEvent& event) {
   } catch (const std::exception& e) {
     std::cerr << "<< Manzil : Failed to parse note clicked payload, "
               << e.what() << "\n";
+  }
+
+  if (webview_json.contains("esc")) {
+    auto* frame = dynamic_cast<Frame*>(GetParent());
+    if (frame != nullptr) {
+      frame->GoBackToList();
+    }
+    return;
   }
 
   if (!webview_json.contains("ref")) {
