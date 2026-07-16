@@ -51,19 +51,21 @@ class ReaderDialog : public wxDialog {
    * @brief Add entry to pop-up stack.
    * @param entry struct entry contain surah number, begin and end ayah.
    */
-  void Navigate(manzil::nav_entry entry, const Quranite& quranite);
+  void Navigate(manzil::nav_entry entry);
 
   ReaderDialog(const ReaderDialog&) = delete;
   ReaderDialog& operator=(const ReaderDialog&) = delete;
 
  private:
   Quranite& quranite_;
+  size_t curr_index_ = 0;
   HeaderCard* header_card_ = nullptr;
   wxWebView* webview_ = nullptr;
   wxButton* back_btn_ = nullptr;
   std::vector<manzil::nav_entry> history_{
       0};  ///< contain stack of opened entry
 
+  void NavigateOnly(manzil::nav_entry entry);
   /**
    * @brief Build html which will be shown and set as webview page.
    * @param entry struct entry contain surah number, begin and end ayah.

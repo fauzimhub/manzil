@@ -262,7 +262,7 @@ void Reader::OnNoteClicked(wxWebViewEvent& event) {
     });
     dialog_->Show();
   } else {
-    dialog_->Navigate(entry, quranite_);
+    dialog_->Navigate(entry);
     dialog_->Raise();
   }
 }

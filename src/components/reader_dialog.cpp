@@ -53,13 +53,21 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   sizer->Add(webview_, 1, wxEXPAND);
   SetSizer(sizer);
 
-  Navigate(entry, quranite_);
+  Navigate(entry);
 }
 
-void ReaderDialog::Navigate(manzil::nav_entry entry, const Quranite& quranite) {
-  const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
+void ReaderDialog::Navigate(manzil::nav_entry entry) {
   history_.push_back(entry);
-  back_btn_->Show(history_.size() > 1);
+  curr_index_ = history_.size() - 1;
+  NavigateOnly(entry);
+}
+
+void ReaderDialog::NavigateOnly(manzil::nav_entry entry) {
+  const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
+
+  back_btn_->Show(history_.size() > 1 && curr_index_ != 0);
+  next_btn_->Show(history_.size() > 1 && curr_index_ != history_.size() - 1);
+  delete_btn_->Show(history_.size() > 1);
 
   if (entry.begin_ayah != entry.end_ayah) {
     header_card_->SetData(
@@ -126,7 +134,7 @@ void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
     return;
   }
 
-  Navigate(entry, quranite_);
+  Navigate(entry);
 }
 
 wxString ReaderDialog::BuildHtml(manzil::nav_entry entry) {
