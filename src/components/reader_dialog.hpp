@@ -62,6 +62,7 @@ class ReaderDialog : public wxDialog {
   HeaderCard* header_card_ = nullptr;
   wxWebView* webview_ = nullptr;
   wxButton* back_btn_ = nullptr;
+  wxButton* next_btn_ = nullptr;
   std::vector<manzil::nav_entry> history_{
       0};  ///< contain stack of opened entry
 
@@ -77,6 +78,7 @@ class ReaderDialog : public wxDialog {
     * @param event Unused command event.
     */
   void OnBack(wxCommandEvent& event);
+  void OnNext(wxCommandEvent& event);
 
   /**
     * @brief Handle when reference in dialog note is clicked.

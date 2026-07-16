@@ -16,6 +16,10 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   back_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnBack, this);
   back_btn_->Hide();
 
+  next_btn_ = new wxButton(this, wxID_ANY, "Next >>");
+  next_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnNext, this);
+  next_btn_->Hide();
+
   const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
 
   if (entry.begin_ayah != entry.end_ayah) {
@@ -45,10 +49,16 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   webview_->Bind(wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED,
                  &ReaderDialog::OnVerseRef, this);
 
-  constexpr int back_btn_border = 5;
+  constexpr int btn_border = 5;
 
   auto* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(back_btn_, 0, wxALL, back_btn_border);
+
+  auto* h_sizer = new wxBoxSizer(wxHORIZONTAL);
+  h_sizer->Add(back_btn_, 0, wxALL, btn_border);
+  h_sizer->AddStretchSpacer(1);
+  h_sizer->Add(next_btn_, 0, wxALL, btn_border);
+
+  sizer->Add(h_sizer, 0, wxEXPAND);
   sizer->Add(header_card_, 1, wxEXPAND);
   sizer->Add(webview_, 1, wxEXPAND);
   SetSizer(sizer);
@@ -87,19 +97,26 @@ void ReaderDialog::NavigateOnly(manzil::nav_entry entry) {
   webview_->SetPage(BuildHtml(entry), "");
 }
 
-//TODO: OnBack should not pop history_
-//      it should just show the previous dialog
-//      like how "back" should be
-//      so there might be a need for next btn
 void ReaderDialog::OnBack(wxCommandEvent& event) {
   (void)event;
   if (history_.size() <= 1) {
     return;
   }
-  history_.pop_back();
-  const auto& prev = history_.back();
-  history_.pop_back();
-  Navigate(prev, quranite_);
+  curr_index_ -= 1;
+  const auto& prev = history_[curr_index_];
+  NavigateOnly(prev);
+}
+
+void ReaderDialog::OnNext(wxCommandEvent& event) {
+  (void)event;
+  if (history_.size() <= 1) {
+    return;
+  }
+  curr_index_ += 1;
+  const auto& next = history_[curr_index_];
+  NavigateOnly(next);
+}
+
 }
 
 void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
