@@ -136,7 +136,7 @@ void ReaderDialog::OnDelete(wxCommandEvent& event) {
     temp_index = curr_index_;
   }
 
-  history_.erase(history_.begin() + static_cast<uint>(curr_index_));
+  history_.erase(history_.begin() + static_cast<unsigned int>(curr_index_));
 
   curr_index_ = temp_index;
 

@@ -1,2 +1,11 @@
 #!/usr/bin/env bash
-exec zig c++ "$@"
+args=()
+for arg in "$@"; do
+  case "$arg" in
+    -I/usr/include|-I/usr/include/) 
+      args+=("-idirafter" "/usr/include")
+      ;;
+    *) args+=("$arg") ;;
+  esac
+done
+exec zig c++ "${args[@]}"
