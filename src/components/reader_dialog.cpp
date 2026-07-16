@@ -20,6 +20,10 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   next_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnNext, this);
   next_btn_->Hide();
 
+  delete_btn_ = new wxButton(this, wxID_ANY, "Delete");
+  delete_btn_->Bind(wxEVT_BUTTON, &ReaderDialog::OnDelete, this);
+  delete_btn_->Hide();
+
   const auto surah_data = quranite_.GetSurah()[entry.surah - 1];
 
   if (entry.begin_ayah != entry.end_ayah) {
@@ -61,6 +65,7 @@ ReaderDialog::ReaderDialog(wxWindow* parent, Quranite& quranite,
   sizer->Add(h_sizer, 0, wxEXPAND);
   sizer->Add(header_card_, 1, wxEXPAND);
   sizer->Add(webview_, 1, wxEXPAND);
+  sizer->Add(delete_btn_, 0, wxALL | wxALIGN_RIGHT, btn_border);
   SetSizer(sizer);
 
   Navigate(entry);
@@ -117,6 +122,26 @@ void ReaderDialog::OnNext(wxCommandEvent& event) {
   NavigateOnly(next);
 }
 
+void ReaderDialog::OnDelete(wxCommandEvent& event) {
+  (void)event;
+  if (history_.size() <= 1) {
+    return;
+  }
+
+  size_t temp_index = 0;
+
+  if (curr_index_ == history_.size() - 1) {
+    temp_index = curr_index_ - 1;
+  } else {
+    temp_index = curr_index_;
+  }
+
+  history_.erase(history_.begin() + static_cast<uint>(curr_index_));
+
+  curr_index_ = temp_index;
+
+  const auto& current = history_[curr_index_];
+  NavigateOnly(current);
 }
 
 void ReaderDialog::OnVerseRef(wxWebViewEvent& event) {
