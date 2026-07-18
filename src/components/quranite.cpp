@@ -4,6 +4,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
+#include "../generated/quranite_data.hpp"
 #include "../manzil.hpp"
 
 using string = std::string;
@@ -18,6 +19,7 @@ using std::cerr;
 //       consistency between verses_count and actual verse entries) is
 //       not validated and is assumed correct from the source files.
 Quranite::Quranite(const manzil::quranite_data_paths& paths) {
+  (void)paths;
 
   json parsed_surah{};
   json parsed_ar{};
@@ -25,10 +27,10 @@ Quranite::Quranite(const manzil::quranite_data_paths& paths) {
   json parsed_notes{};
 
   try {
-    parsed_surah = manzil::ParseJSON(paths.surah, manzil::k_surah_count);
-    parsed_ar = manzil::ParseJSON(paths.ar, manzil::k_ayah_count);
-    parsed_en = manzil::ParseJSON(paths.en, manzil::k_ayah_count);
-    parsed_notes = manzil::ParseJSON(paths.notes);
+    parsed_surah = json::parse(k_chapters_data);
+    parsed_ar = json::parse(k_ar_data);
+    parsed_en = json::parse(k_en_data);
+    parsed_notes = json::parse(k_notes_data);
   } catch (const std::exception& e) {
     std::cerr << "<< Manzil: fatal error loading Quran data: " << e.what()
               << "\n";

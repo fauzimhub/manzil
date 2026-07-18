@@ -11,6 +11,41 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(EXECUTABLE_NAME "manzil")
 
+find_program(ODIN_EXECUTABLE odin DOC "Path to the Odin compiler")
+
+if(NOT ODIN_EXECUTABLE)
+  message(
+    FATAL_ERROR
+      "odin executable not found. Please install Odin and ensure it is on your PATH.\n"
+      "See: https://odin-lang.org/docs/install/")
+endif()
+
+message(STATUS "Found odin: ${ODIN_EXECUTABLE}")
+
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/generated)
+add_custom_command(
+  OUTPUT ${CMAKE_SOURCE_DIR}/src/generated/quranite_data.hpp
+  COMMAND
+    odin
+    run
+    ${CMAKE_SOURCE_DIR}/src/embed_json.odin
+    -file
+    --
+    ${CMAKE_SOURCE_DIR}/assets/chapters-data.json
+    ${CMAKE_SOURCE_DIR}/assets/verses_ar_original.json
+    ${CMAKE_SOURCE_DIR}/assets/verses_en_sam-gerrans_with-notes.json
+    ${CMAKE_SOURCE_DIR}/assets/notes_en_sam-gerrans.json
+    ${CMAKE_SOURCE_DIR}/src/generated/quranite_data.hpp
+  DEPENDS
+    ${CMAKE_SOURCE_DIR}/assets/chapters-data.json
+    ${CMAKE_SOURCE_DIR}/assets/verses_ar_original.json
+    ${CMAKE_SOURCE_DIR}/assets/verses_en_sam-gerrans_with-notes.json
+    ${CMAKE_SOURCE_DIR}/assets/notes_en_sam-gerrans.json)
+
+add_custom_target(
+  generate_json_headers
+  DEPENDS ${CMAKE_SOURCE_DIR}/src/generated/quranite_data.hpp)
+
 set(wxBUILD_SHARED OFF)
 set(wxBUILD_TESTS OFF)
 set(wxBUILD_SAMPLES OFF)
@@ -55,6 +90,8 @@ add_executable(
   src/components/reader.cpp
   src/components/reader_dialog.cpp
   src/events.cpp)
+
+add_dependencies(${EXECUTABLE_NAME} generate_json_headers)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   enable_language(RC)
