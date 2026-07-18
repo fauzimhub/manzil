@@ -10,6 +10,8 @@ based on : Official Quranite Reader by Sam Gerrans
 
 ## USAGE
 
+WARNING : Make sure odin is installed and on path, odin used as scripting to generate header to embed json 
+
 ### Debug mode 
 
 ``` sh
