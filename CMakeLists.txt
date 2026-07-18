@@ -127,6 +127,18 @@ target_link_options(
     $<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:${CMAKE_SYSTEM_NAME},Windows>>>:-flto=thin>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},Windows>:-Wl,--subsystem,windows>)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_custom_command(
+    TARGET ${EXECUTABLE_NAME}
+    POST_BUILD
+    COMMAND
+      ${CMAKE_COMMAND} -E copy_if_different
+      "${CMAKE_BINARY_DIR}/third_party/wxwidgets/lib/WebView2Loader.dll"
+      "$<TARGET_FILE_DIR:${EXECUTABLE_NAME}>"
+    COMMENT "Copying WebView2Loader.dll next to ${EXECUTABLE_NAME}"
+    VERBATIM)
+endif()
+
 target_compile_definitions(
   ${EXECUTABLE_NAME}
   PRIVATE $<$<CONFIG:Debug>:DEBUG_MODE=1> $<$<CONFIG:Release>:RELEASE_MODE=1>)
