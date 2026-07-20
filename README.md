@@ -15,7 +15,7 @@ WARNING : Make sure zig is installed and on path, zig used as scripting to gener
 ### Debug mode 
 
 ``` sh
-git clone --recurse-submodules --shallow-sumbmodules https://codeberg.org/fauzim/manzil.git
+git clone --recurse-submodules --shallow-submodules https://codeberg.org/fauzim/manzil.git
 cd manzil
 cmake -G ninja -B build 
 ninja -C build 
@@ -26,7 +26,7 @@ ninja -C build
 Make sure zig is installed and on path, zig used for easy cross compile
 
 ``` sh
-git clone --recurse-submodules --shallow-sumbmodules https://codeberg.org/fauzim/manzil.git
+git clone --recurse-submodules --shallow-submodules https://codeberg.org/fauzim/manzil.git
 cd manzil
 # x86_64 Linux
 # check for your glib version :
