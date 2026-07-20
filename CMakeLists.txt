@@ -11,30 +11,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(EXECUTABLE_NAME "manzil")
 
-find_program(ODIN_EXECUTABLE odin DOC "Path to the Odin compiler")
+find_program(ZIG_EXECUTABLE zig DOC "Path to the zig")
 
-if(NOT ODIN_EXECUTABLE)
+if(NOT ZIG_EXECUTABLE)
   message(
     FATAL_ERROR
-      "odin executable not found. Please install Odin and ensure it is on your PATH.\n"
-      "See: https://odin-lang.org/docs/install/")
+      "zig executable not found. Please install zig and ensure it is on your PATH.\n"
+      "See: https://ziglang.org/download/")
 endif()
 
-message(STATUS "Found odin: ${ODIN_EXECUTABLE}")
+message(STATUS "Found zig: ${ZIG_EXECUTABLE}")
 
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/generated)
 add_custom_command(
   OUTPUT ${CMAKE_SOURCE_DIR}/src/generated/quranite_data.hpp
   COMMAND
-    odin
-    run
-    ${CMAKE_SOURCE_DIR}/src/embed_json.odin
-    -file
-    --
-    ${CMAKE_SOURCE_DIR}/assets/chapters-data.json
-    ${CMAKE_SOURCE_DIR}/assets/verses_ar_original.json
-    ${CMAKE_SOURCE_DIR}/assets/verses_en_sam-gerrans_with-notes.json
-    ${CMAKE_SOURCE_DIR}/assets/notes_en_sam-gerrans.json
+    zig run ${CMAKE_SOURCE_DIR}/assets/embed_json.zig --
     ${CMAKE_SOURCE_DIR}/src/generated/quranite_data.hpp
   DEPENDS
     ${CMAKE_SOURCE_DIR}/assets/chapters-data.json

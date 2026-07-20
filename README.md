@@ -10,7 +10,7 @@ based on : Official Quranite Reader by Sam Gerrans
 
 ## USAGE
 
-WARNING : Make sure odin is installed and on path, odin used as scripting to generate header to embed json 
+WARNING : Make sure zig is installed and on path, zig used as scripting to generate header to embed json also as drop in cpp compiler
 
 ### Debug mode 
 
