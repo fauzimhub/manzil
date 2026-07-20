@@ -6,10 +6,10 @@ HeaderCard::HeaderCard(wxWindow* parent, wxString number, wxString ayah,
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
               wxFULL_REPAINT_ON_RESIZE),
       number_(std::move(number)),
-      ayah_(std::move(ayah)),
       arabic_(std::move(arabic)),
       transliteration_(std::move(transliteration)),
-      translation_(std::move(translation)) {
+      translation_(std::move(translation)),
+      ayah_(std::move(ayah)) {
   mode_ = mode;
   UpdateMaxSize();
 
@@ -27,7 +27,6 @@ void HeaderCard::OnPaint(wxPaintEvent& event) {
   dev_ctx.Clear();
 
   const wxColour white(255, 255, 255);
-  const wxColour gray(200, 200, 200);
   const wxColour black(0, 0, 0);
   constexpr int pen_width = 1;
   constexpr wxCoord rect_x = 0;

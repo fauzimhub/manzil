@@ -71,9 +71,11 @@ wxString Reader::BuildHtml(const manzil::surah_verses& surah_verses,
     json notes_array = json::array();
 
     unsigned int real_ayah_index = need_bismillah ? ayah - 2 : ayah - 1;
-    auto ayah_notes = (need_bismillah && ayah == 1)
-                          ? all_notes[0][0]
-                          : all_notes[surah_data.number - 1][real_ayah_index];
+    auto ayah_notes =
+        (need_bismillah && ayah == 1)
+            ? all_notes[0][0]
+            : all_notes[static_cast<size_t>(surah_data.number - 1)]
+                       [real_ayah_index];
 
     for (const auto& ayah_note : ayah_notes) {
 
